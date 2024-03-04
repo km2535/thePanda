@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/panda/api/extraction")
+@RequestMapping("/api/panda-v1/extraction")
 public class KeywordExtractionController {
 
 	private final GmarketProductNameCrawler gmarketProductNameCrawler;

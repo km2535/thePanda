@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/panda/api/search")
+@RequestMapping("/api/panda-v1/search")
 public class WebCrawlerController {
 
 	private final RelationalKeywordCrawler relationalKeywordCrawler;

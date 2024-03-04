@@ -18,7 +18,7 @@ import com.panda.thePanda.util.KeywordRecommendationGenerator;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("/panda/api/generator")
+@RequestMapping("/api/panda-v1/generator")
 public class KeywordGeneratorController {
 
 	private final DupulicateKeywordArrange dupulicateKeywordArrange;

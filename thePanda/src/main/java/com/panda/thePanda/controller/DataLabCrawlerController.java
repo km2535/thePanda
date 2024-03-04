@@ -19,7 +19,7 @@ import com.panda.thePanda.util.ListToString;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("/panda/api/datalab")
+@RequestMapping("/api/panda-v1/datalab")
 public class DataLabCrawlerController {
 	private final DataLabTopKeywordCrawler dataLabTopKeywordCrawler;
 

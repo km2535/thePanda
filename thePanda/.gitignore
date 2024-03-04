@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+###properties###
+application.properties
+application-oauth.properties
+application-database.properties
+application-email.properties
+application-jwtkey.properties
