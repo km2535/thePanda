@@ -62,10 +62,12 @@ public class CoupangProductController {
 
 	@Operation(summary = "쿠팡 리뷰 상품 분석", description = "쿠팡 리뷰를 분석하여 상품평 알바를 찾아냅니다.")
 	@GetMapping("/product/review")
-	public List<HashMap<String, HashMap<String, String>>> getWeeklyReviewsByFiftyReviewers(
-			@Parameter(description = "검색 키워드") @RequestParam String productId) throws IOException {
+	public Map<String, Map<String, String>> getWeeklyReviewsByFiftyReviewers(
+			@Parameter(description = "검색 키워드") @RequestParam String productId,
+			@Parameter(description = "검색 페이지(페이지 당 5인)") @RequestParam int searchPage)
+			throws IOException, InterruptedException {
 
-		return coupangProductNameCrawler.getWeeklyReviewsByFiftyReviewers(productId);
+		return coupangProductNameCrawler.getWeeklyReviewsByFiftyReviewers(productId, searchPage);
 	}
 
 }

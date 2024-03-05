@@ -16,6 +16,7 @@ public class UserEntity {
 
   @Id
   private String userId;
+  private String username;
   private String password;
   private String email;
   private String type;
@@ -29,11 +30,12 @@ public class UserEntity {
   // this.role = "ROLE_USER";
   // }
 
-  public UserEntity(String userId, String email, String type) {
+  public UserEntity(String userId, String email, String username, String type) {
     this.userId = userId;
+    this.username = username;
     this.password = "Password";
     this.email = email;
-    this.type = "app";
+    this.type = type;
     this.role = "ROLE_USER";
   }
 

@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
   private final UserRepository userRepository;
 
-  @SuppressWarnings("null")
   @Override
   public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
     OAuth2User oAuth2User = super.loadUser(request);
@@ -34,23 +33,36 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
     UserEntity userEntity = null;
     String userId = null;
     String email = null;
+    String username = null;
+
     if (oauthClientName.equals("kakao")) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> kakaoAccountAttributes = (Map<String, Object>) oAuth2User.getAttributes()
+          .get("kakao_account");
+
+      @SuppressWarnings("unchecked")
+      Map<String, String> profile = (Map<String, String>) kakaoAccountAttributes.get("profile");
+
       userId = "kakao_" + oAuth2User.getAttributes().get("id");
-      email = "kakao_" + oAuth2User.getAttributes().get("email");
-      System.out.println(email);
-      userEntity = new UserEntity(userId, email, oauthClientName);
+      email = "" + kakaoAccountAttributes.get("email");
+      username = "" + profile.get("nickname");
+      userEntity = new UserEntity(userId, email, username, oauthClientName);
     }
+
     if (oauthClientName.equals("naver")) {
       @SuppressWarnings("unchecked")
       Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("response");
       userId = "naver_" + responseMap.get("id").substring(0, 14);
       email = responseMap.get("email");
-      userEntity = new UserEntity(userId, email, oauthClientName);
+      username = responseMap.get("name");
+      userEntity = new UserEntity(userId, email, username, oauthClientName);
     }
+
     if (oauthClientName.equals("Google")) {
       userId = "google_" + oAuth2User.getAttributes().get("sub");
-      email = "google_" + oAuth2User.getAttributes().get("email");
-      userEntity = new UserEntity(userId, email, oauthClientName);
+      email = "" + oAuth2User.getAttributes().get("email");
+      username = "" + oAuth2User.getAttributes().get("name");
+      userEntity = new UserEntity(userId, email, username, oauthClientName);
     }
 
     userRepository.save(userEntity);
