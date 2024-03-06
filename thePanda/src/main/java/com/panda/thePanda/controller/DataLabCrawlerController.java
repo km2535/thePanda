@@ -25,6 +25,7 @@ public class DataLabCrawlerController {
 
 	public DataLabCrawlerController(DataLabTopKeywordCrawler dataLabTopKeywordCrawler) {
 		this.dataLabTopKeywordCrawler = dataLabTopKeywordCrawler;
+
 	}
 
 	@Operation(summary = "카테고리 별 상위 키워드 검색", description = "카테고리를 입력받아 상위 키워드를 검색하여 리스트를 전달합니다.")
