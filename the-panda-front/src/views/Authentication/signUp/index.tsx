@@ -1,31 +1,29 @@
 import { SNS_SIGN_IN_URL } from 'apis';
 import React from 'react';
-import './style.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
-   
+  const navigate = useNavigate();
   const onSnsSignInButtonClickHandler = (type: 'kakao' | 'naver' | 'google') => {
     window.location.href = SNS_SIGN_IN_URL(type);
   }
+  const logoClickHandler = () => {
+    navigate("/")
+  }
   return (
-    <div id='sign-up-wrapper'>
-      <div className='sign-up-image'></div>
-      <div className={'sign-up-container'}>
-        <div className={'sign-up-box'}>
-          <div className={'sign-up-title'}>{'키워드 분석 서비스'}</div>
-          <div className={'sign-up-content-box'}>
-            <div className={'sign-up-content-sns-sign-in-box'}>
-              <div className={'sign-up-content-sns-sign-in-title'}>{'Sns login'}</div>
-              <div className={'sign-up-content-sns-sign-in-button-box'}>
-                <div className={'kakao-sign-in-button'} onClick={()=>onSnsSignInButtonClickHandler('kakao')}></div>
-                <div className={'naver-sign-in-button'}onClick={()=>onSnsSignInButtonClickHandler('naver')}></div>
-                <div className={'google-sign-in-button'}onClick={()=>onSnsSignInButtonClickHandler('google')}></div>
-              </div>
-            </div>
-            <div className={'sign-up-content-divider'}></div>
-            <div className={'sign-up-content-input-box'}>
-            </div>
-            
+    <div className='w-screen h-screen flex justify-center items-center'>
+      <div className={'flex flex-col w-[450px] h-[350px] justify-evenly shadow-2xl rounded-xl'}>
+        <div className={'bg-center bg-cover bg-logo w-full h-[150px] bg-no-repeat cursor-pointer'} onClick={logoClickHandler}></div>
+        <div className={'text-center h-[50px] leading-10'}>{'Sns login'}</div>
+        <div className={'flex '}>
+          <div className={'w-1/3 flex justify-center'}>
+            <div className={'bg-center  bg-kakaoSign bg-100% h-16 bg-no-repeat w-16 cursor-pointer hover:scale-110	transition ease-in'} onClick={()=>onSnsSignInButtonClickHandler('kakao')}></div>
+          </div>
+          <div className={'w-1/3 flex justify-center'}>
+            <div className={'bg-center bg-naverSign bg-100% h-16 bg-no-repeat w-16 cursor-pointer hover:scale-110 transition ease-in'} onClick={()=>onSnsSignInButtonClickHandler('naver')}></div>
+          </div>
+          <div className={'w-1/3 flex justify-center'}>
+            <div className={'bg-center bg-googleSign bg-100% h-16 bg-no-repeat w-16 cursor-pointer hover:scale-110 transition ease-in'} onClick={()=>onSnsSignInButtonClickHandler('google')}></div>
           </div>
         </div>
       </div>
