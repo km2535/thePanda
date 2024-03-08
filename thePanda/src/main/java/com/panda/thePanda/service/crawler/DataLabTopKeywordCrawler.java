@@ -35,7 +35,7 @@ public class DataLabTopKeywordCrawler {
 		try {
 			Connection.Response response = Jsoup.connect(url)
 					.header("referer", referer)
-					.timeout(5000)
+					.timeout(10000)
 					.ignoreContentType(true)
 					.execute();
 
@@ -85,7 +85,7 @@ public class DataLabTopKeywordCrawler {
 		try {
 			Connection.Response response = Jsoup.connect(url)
 					.header("referer", referer)
-					.timeout(5000)
+					.timeout(10000)
 					.ignoreContentType(true)
 					.execute();
 

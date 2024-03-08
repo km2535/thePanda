@@ -16,6 +16,7 @@ module.exports = {
         kakaoSign: "url('./assets/images/kakao-sign-in.png')",
       },
       colors: {
+        iconsColor: "#001C3499",
         brandFontColor: "#677785",
         brandHoverFontColor: "#122028",
       },
