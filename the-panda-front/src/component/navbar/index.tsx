@@ -1,6 +1,7 @@
 import DepthNavBtn from 'component/buttons/depthNavBtn';
 import MenuBtn from 'component/buttons/navbarButton';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface MenuProps { 
   mainMenuList: { [key: string]: {[key:string]:string} };
@@ -8,14 +9,18 @@ interface MenuProps {
 
 const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
  const [isToggle, setIsToggle] = useState<boolean>(false);
+  const navigate = useNavigate();
   const menuHandler = () => {
     setIsToggle(() => !isToggle);
   }
+  const logoClick = () => {
+    navigate("/")
+  }
   return (
-     <div className={isToggle? "relative w-full z-100 bg-white-800 text-brandFontColor pt-4 h-[100px] border-b-zinc-500 shadow-sm transition-all":"w-full relative bg-white-800 text-brandFontColor pt-4 h-[60px]  border-b-zinc-500 shadow-sm transition-all"}>
+     <div className={isToggle? "w-full z-50 text-brandFontColor pt-4 h-[100px] border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50":"w-full text-brandFontColor pt-4 h-[60px]  border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50 z-50"}>
       <div className="container mx-auto flex justify-between items-center">
         <div className='w-1/6 h-full'>
-          <div className="bg-center bg-logo w-full h-10 bg-no-repeat cursor-pointer"></div>
+          <div className="bg-center bg-logo w-full h-10 bg-no-repeat cursor-pointer" onClick={logoClick}></div>
         </div>
         <div className="flex w-1/2 space-x-8 flex-wrap	">
           {

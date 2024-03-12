@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,22 +34,6 @@ public class DataLabCrawlerController {
 		Map<String, List<String>> response = new HashMap<>();
 		for (String item : categorys) {
 			response.put(item, dataLabTopKeywordCrawler.crawlTopKeywordByCategory(item, 1));
-		}
-		return response;
-	}
-
-	@Operation(summary = "인기 검색어 받기 (top 500 키워드)", description = "페이지와 카테고리를 입력 받아 상위 키워드를 검색하여 리스트를 전달합니다.")
-	@GetMapping("/page-by/top-keyword")
-	public Map<String, List<String>> getDataLabTopKeywordByCategoryAndPage(
-			@RequestParam String category, int page, int requireMilliSeconds) throws IOException {
-		Map<String, List<String>> response = new HashMap<>();
-		for (int i = 1; i < page + 1; i++) {
-			response.put(i + "", dataLabTopKeywordCrawler.crawlTopKeywordByCategory(category, i));
-			try {
-				Thread.sleep(requireMilliSeconds); // 1초 대기
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
 		}
 		return response;
 	}

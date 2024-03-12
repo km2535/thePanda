@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import {  RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Landing from 'views/landing';
+import SignUp from 'views/Authentication/signUp';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +15,9 @@ const router = createBrowserRouter([
     element: <App />,
     //errorElement: <NotFound />,
     children: [
-      { index: true, path: "/", element: <Landing /> }, //index로 '/' 메인페이지 지정
+      { index: true, path: "/", element: <Landing /> }, 
+      {
+        path: "auth/sign-up", element: <SignUp/>}
     ],
   },
 ]);
