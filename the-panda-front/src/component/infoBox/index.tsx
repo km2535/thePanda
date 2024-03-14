@@ -4,25 +4,21 @@ import { InfoTypeForRealTime, categoryType } from 'types/propsTypes/props-types'
 import { IoIosArrowForward } from "react-icons/io";
 import { categories } from 'types/iconsTypes/icons-types';
 import { buttontitle } from 'types/buttonsTypes/button-types';
-import { mergeObjects } from 'util/mergeObjects';
-import filterData from 'util/filterData';
 
 //searchType과 selectedCategory를 전달 받아 api를 요청
 export default function InfoBox(props: InfoTypeForRealTime) {
   const [category, setCategory] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [cmpData, setcmpData] = useState<categoryType[]>([]);
-  const [categoriesData, setCategoriesData] = useState<categoryType[]>([]);
   const [updatedate, setUpdatedate] = useState<string>();
-  const [newdata, setNewData] = useState<categoryType[]>([]);
   useEffect(() => { 
     categories.map((v) => (v.categoryId === props.selectedCategory) ? setCategory(v.category) : "");
     buttontitle.map((v) => (v.typeName === props.searchType) ? setTitle(v.buttonName) : "");
-    KeywordData(props,setcmpData,setCategoriesData,setUpdatedate);
-  }, [props])
-  useEffect(() => {
-    setNewData(mergeObjects(categoriesData, cmpData))
-  }, [categoriesData, cmpData])
+    KeywordData(props, setcmpData, setUpdatedate);
+    
+  }, [ props])
+
+ 
   return (
     <div className='flex bg-backgroundColor  p-10 shadow-2xl rounded-2xl w-full'>
       <div className={'w-full'}>
@@ -34,30 +30,38 @@ export default function InfoBox(props: InfoTypeForRealTime) {
         <div className='text-iconsColor font-bold text-2xl h-[30px] mt-[10px] mb-[20px]'> 
           {title}
         </div>
-        <div className='text-informationColor'> 
-          {updatedate}
+        <div className='text-informationColor text-right'> 
+          기준일 : {updatedate} 
         </div>
-        <div className='h-[600px] overflow-y-scroll '> 
+        <div className='h-[600px] overflow-y-scroll mt-3'> 
           <table className='w-full text-center'>
             <thead className='sticky top-0 bg-backgroundColor'>
             <tr className={'text-informationColor font-thin '}>
               <th className='font-thin sticky'>순위</th>
               <th className='font-thin sticky'>키워드</th>
               <th className='font-thin sticky'>검색량</th>
-              <th className='font-thin sticky'>경쟁강도</th>
+              <th className='font-thin sticky text-pretty'>경쟁도</th>
               <th className='font-thin sticky'>하위카테고리</th>
             </tr>
             </thead>
             <tbody>
-            {newdata.map((element,i) => 
-              <tr key={i} className={'text-iconsColor font-bold text-lg'}>
-                <td className={'text-iconsColor'}>{i+1}</td>
-                <td className={'text-iconsColor'}>{element.keyword}</td>
-                <td>{element.total_qc_cnt}</td>
-                <td>{element.comp_idx}</td>
-                <td> {element.category3} {element.category4} </td>
+              {cmpData.length <= 0 ? <tr className={'h-28'}>
+                <td colSpan={5} rowSpan={10} className={'w-full text-2xl font-bold text-brandFontColor'}>키워드가 존재하지 않습니다.</td>
+              </tr> :
+            cmpData.map((element,i) => 
+              <tr key={i} className={'text-iconsColor font-bold text-lg text-pretty'}>
+                <td className={'w-1/12'}>{i+1}</td>
+                <td className={'w-4/12 text-pretty'}>{element.keyword}</td>
+                <td className={'w-3/12'}>{element.total_qc_cnt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}</td>
+                <td className={'w-1/12'}>{element.comp_idx}</td>
+                <td className={'w-3/12 text-sm '}>
+                  <div className={'flex justify-center'}>
+                    {element.category3 !== "" ? <>{element.category4 !== "" ? element.category4: element.category3}</> : element.category2}
+                  </div>
+                </td>
               </tr>
-            )}
+              )
+            }
             </tbody>
           </table>
         </div>

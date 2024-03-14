@@ -15,7 +15,7 @@ export function mergeObjects(categories: categoryType[], cmpIdx: categoryType[])
           monthly_ave_pc_cnt: cmp.monthly_ave_pc_cnt,
           monthly_mobile_qc_cnt: cmp.monthly_mobile_qc_cnt,
           monthly_pc_qc_cnt: cmp.monthly_pc_qc_cnt,
-          total_qc_cnt: cate.total_product_count,
+          total_qc_cnt: cmp.total_qc_cnt,
           brand: cate.brand,
           category1: cate.category1,
           category2: cate.category2,

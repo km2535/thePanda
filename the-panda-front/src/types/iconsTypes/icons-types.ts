@@ -1,9 +1,14 @@
 
 export const categories = [{
+  categoryId:"00000000",
+  category: "전체",
+  iconImagePath: "bg-All",
+  isActive:true
+},{
   categoryId:"50000000",
   category: "패션의류",
   iconImagePath: "bg-fashion",
-  isActive:true
+  isActive:false
 },{
   categoryId:"50000001",
   category: "패션잡화",

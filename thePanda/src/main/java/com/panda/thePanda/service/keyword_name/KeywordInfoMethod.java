@@ -28,7 +28,7 @@ public class KeywordInfoMethod {
   private final KeywordInfo50000008Repository keywordInfo50000008Repository;
   private final KeywordInfo50000009Repository keywordInfo50000009Repository;
 
-  public void saveCmpIdx(String id,
+  public void saveCmpIdx(
       String keyword,
       String monthly_pc_qc_cnt,
       String monthly_mobile_qc_cnt,
@@ -39,47 +39,85 @@ public class KeywordInfoMethod {
 
     switch (category) {
       case "50000000":
-        keywordInfo50000000Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000000Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000001":
-        keywordInfo50000001Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000001Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000002":
-        keywordInfo50000002Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000002Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000003":
-        keywordInfo50000003Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000003Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000004":
-        keywordInfo50000004Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000004Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000005":
-        keywordInfo50000005Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000005Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000006":
-        keywordInfo50000006Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000006Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000007":
-        keywordInfo50000007Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000007Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000008":
-        keywordInfo50000008Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000008Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
       case "50000009":
-        keywordInfo50000009Repository.saveInfoCompetition(id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
+        keywordInfo50000009Repository.saveInfoCompetition(keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,
             total_qc_cnt, monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx);
         break;
 
       default:
+        break;
+    }
+  }
+
+  public void backupData(String category) {
+
+    switch (category) {
+      case "50000000":
+        keywordInfo50000000Repository.backupToBackupTable();
+        break;
+      case "50000001":
+        keywordInfo50000001Repository.backupToBackupTable();
+        break;
+      case "50000002":
+        keywordInfo50000002Repository.backupToBackupTable();
+        break;
+      case "50000003":
+        keywordInfo50000003Repository.backupToBackupTable();
+
+        break;
+      case "50000004":
+        keywordInfo50000004Repository.backupToBackupTable();
+
+        break;
+      case "50000005":
+        keywordInfo50000005Repository.backupToBackupTable();
+        break;
+      case "50000006":
+        keywordInfo50000006Repository.backupToBackupTable();
+        break;
+      case "50000007":
+        keywordInfo50000007Repository.backupToBackupTable();
+        break;
+      case "50000008":
+        keywordInfo50000008Repository.backupToBackupTable();
+        break;
+      case "50000009":
+        keywordInfo50000009Repository.backupToBackupTable();
         break;
     }
   }

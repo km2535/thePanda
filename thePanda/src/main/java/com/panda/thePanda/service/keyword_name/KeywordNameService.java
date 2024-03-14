@@ -2,14 +2,13 @@ package com.panda.thePanda.service.keyword_name;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,17 +34,29 @@ public class KeywordNameService {
     // 데이터 lab api
     System.out.println("데이터 랩 저장 중...");
     list = saveDatalab(category, list);
-
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
     // keyword_info_base 저장
     System.out.println("keyword_info_base 저장중...");
     saveCategory(category, list);
-
+    try {
+      Thread.sleep(450);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
     // 계절 상품인지 확인 후 db 저장
     System.out.println("계절  상품 저장중.");
     listByKeywordInfoSeason = keywordInfoBaseMethod.getKeywords(category);
     System.out.println(listByKeywordInfoSeason.size());
     savaIsSeason(listByKeywordInfoSeason, category);
-
+    try {
+      Thread.sleep(450);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
     // keyword _base 저장
     System.out.println("클릭율 저장 중....");
     Set<String> setdataStrat = new HashSet<>();
@@ -69,17 +80,16 @@ public class KeywordNameService {
 
     // 현재 리스트 키워드 불러오기
     list = keywordNameMethod.keywordGetDatalab(category);
+    // 있으면 해당 키워드의 date를 삭제
+    if (list.size() > 0) {
+      keywordNameMethod.deleteKeywordDatalab(category, category);
+    }
 
     for (String keyword : apiList) {
-      if (list.contains(keyword)) {
-        // 있으면 해당 키워드의 date를 update하고
-        keywordNameMethod.keywordUpdateDatalab(category, keyword);
-      } else {
-        // 없다면 createDate와 해당 키워드를 db에 추가
-        keywordNameMethod.saveKeywordDatalab(category, keyword);
-      }
+      // 없다면 createDate와 해당 키워드를 db에 추가
+      keywordNameMethod.saveKeywordDatalab(category, keyword);
     }
-    return list;
+    return apiList;
   }
 
   private void saveCategory(String category, List<String> list) throws IOException, GeneralSecurityException {
@@ -207,13 +217,11 @@ public class KeywordNameService {
   }
 
   private Set<String> saveKeywordToCmp(Set<String> keywords, long sleepMilliSecond, String category) {
-    Date now = new Date();
-    String currentDate = new SimpleDateFormat("yyyyMM").format(now);
     Set<String> errorKeyword = new HashSet<>();
     Set<String> errorKeywordForreport = new HashSet<>();
 
     long sleepMilliSeconds = sleepMilliSecond;
-    if (sleepMilliSecond > 1000)
+    if (sleepMilliSecond > 600)
       return null;
     while (keywords.size() != 0) {
       ObjectMapper objectMapperForKeyword = new ObjectMapper();
@@ -242,20 +250,23 @@ public class KeywordNameService {
             String monthly_ave_pc_cnt = itemNode.get("monthlyAvePcCtr").asText();
             String monthly_ave_mobile_cnt = itemNode.get("monthlyAveMobileCtr").asText();
             String comp_idx = itemNode.get("compIdx").asText();
-            String id = searchKeyword + currentDate;
-            keywordInfoMethod.saveCmpIdx(id, searchKeyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt, total_qc_cnt,
-                monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx, category);
-            ;
-            // 등록
-            System.out.println(searchKeyword + " 등록");
-            keywords.remove(searchKeyword);
+            try {
+              keywordInfoMethod.saveCmpIdx(searchKeyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt, total_qc_cnt,
+                  monthly_ave_pc_cnt, monthly_ave_mobile_cnt, comp_idx, category);
+              System.out.println(searchKeyword + " 등록");
+              keywords.remove(searchKeyword);
+            } catch (DuplicateKeyException e) { // 이곳에 사용하는 데이터베이스에 맞는 적절한 예외 유형을 사용하세요.
+              System.out.println(searchKeyword + "은/는 이미 데이터베이스에 존재합니다. 다음 키워드로 넘어갑니다.");
+              keywords.remove(searchKeyword);
+              continue; // 해당 키워드 처리를 건너뛰고 다음 반복으로 넘어감
+            }
           } else {
             System.out.println("검색 결과 없음");
             keywords.remove(keyword);
             break;
           }
         }
-        sleepMilliSeconds = 100;
+        sleepMilliSeconds = 400;
       } catch (Exception e) {
         System.out.println("키워드 검색결과 에러");
         keywords.remove(keyword);

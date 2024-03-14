@@ -17,14 +17,14 @@ export default function Landing() {
   const [searchType, setSearchType] = useState("trendKeyword");
   const [searchTypeForRealTime, setSearchTypeForRealTime] = useState(buttontitle);
   const [categoryiesCopy, setCategoryiesCopy] = useState(categories);
-  const [selectedCategory, setSelectedCategory] = useState("50000000");
+  const [selectedCategory, setSelectedCategory] = useState("00000000");
   const [filterInfo, setFilterInfo] = useState<filterType>({
-      searchMax: 1000,
+      searchMax: 3000000,
       searchMin: 100,
       copIdxHigh: true,
       copIdxMiddle: true,
       copIdxLow: true,
-      brand: true});
+      brand: false});
   const mainLogo = () => {
     navigate("/");
   };
@@ -42,7 +42,7 @@ export default function Landing() {
     e.preventDefault();
     setFilterInfo({
       searchMax: e.target.searchMax.value,
-      searchMin: e.target.searchMax.value,
+      searchMin: e.target.searchMin.value,
       copIdxHigh: e.target.cmpIdxHigh.checked,
       copIdxMiddle: e.target.cmpIdxMiddle.checked,
       copIdxLow: e.target.cmpIdxLow.checked,
@@ -119,7 +119,7 @@ export default function Landing() {
           </div>
         </section>
         <section className={'mt-10 flex'}>
-          <div className={'w-3/4 mr-5'}>
+          <div className={'w-3/4 mr-5 mb-5'}>
             {/* 실시간 정보 창 component */}
             <InfoBox dataFilter={filterInfo} searchType={searchType} selectedCategory={selectedCategory}  />
           </div>

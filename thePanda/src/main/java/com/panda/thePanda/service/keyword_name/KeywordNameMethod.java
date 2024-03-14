@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+// 데이터 랩 관련 데이터 레포지토리
 public class KeywordNameMethod {
   private final KeywordName50000000Repository keyword5000000Repositoty;
   private final KeywordName50000001Repository keyword5000001Repositoty;
@@ -135,6 +136,41 @@ public class KeywordNameMethod {
         break;
       case "50000009":
         keyword5000009Repositoty.saveKeyword(keyword);
+        break;
+    }
+  }
+
+  public void deleteKeywordDatalab(String category, String keyword) {
+    switch (category) {
+      case "50000000":
+        keyword5000000Repositoty.deleteAll();
+        break;
+      case "50000001":
+        keyword5000001Repositoty.deleteAll();
+        break;
+      case "50000002":
+        keyword5000002Repositoty.deleteAll();
+        break;
+      case "50000003":
+        keyword5000003Repositoty.deleteAll();
+        break;
+      case "50000004":
+        keyword5000004Repositoty.deleteAll();
+        break;
+      case "50000005":
+        keyword5000005Repositoty.deleteAll();
+        break;
+      case "50000006":
+        keyword5000006Repositoty.deleteAll();
+        break;
+      case "50000007":
+        keyword5000007Repositoty.deleteAll();
+        break;
+      case "50000008":
+        keyword5000008Repositoty.deleteAll();
+        break;
+      case "50000009":
+        keyword5000009Repositoty.deleteAll();
         break;
     }
   }

@@ -10,6 +10,7 @@ module.exports = {
         "100%": "100% 100%",
       },
       backgroundImage: {
+        All: "url(./assets/images/panda.png)",
         logo: "url('./assets/images/logo.svg')",
         naverSign: "url('./assets/images/naver-sign-in.png')",
         googleSign: "url('./assets/images/google-sign-in.png')",

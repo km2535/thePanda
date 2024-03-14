@@ -17,9 +17,8 @@ public interface KeywordInfo50000001Repository extends JpaRepository<KeywordInfo
 
     @Modifying
     @Transactional
-    @Query("INSERT INTO keyword_info_50000001 (id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date) VALUES (:id, :keyword, :monthly_pc_qc_cnt, :monthly_mobile_qc_cnt, :total_qc_cnt, :monthly_ave_pc_cnt,:monthly_ave_mobile_cnt, :comp_idx, CURDATE())")
+    @Query("INSERT INTO keyword_info_50000001 (keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date) VALUES ( :keyword, :monthly_pc_qc_cnt, :monthly_mobile_qc_cnt, :total_qc_cnt, :monthly_ave_pc_cnt,:monthly_ave_mobile_cnt, :comp_idx, CURDATE())")
     void saveInfoCompetition(
-            @Param("id") String id,
             @Param("keyword") String keyword,
             @Param("monthly_pc_qc_cnt") String monthly_pc_qc_cnt,
             @Param("monthly_mobile_qc_cnt") String monthly_mobile_qc_cnt,
@@ -31,4 +30,6 @@ public interface KeywordInfo50000001Repository extends JpaRepository<KeywordInfo
     @Query(value = "SELECT * FROM keyword_info_50000001 ORDER BY CAST(total_qc_cnt AS SIGNED) DESC", nativeQuery = true)
     List<KeywordInfo50000001Entity> getKeyword();
 
+    @Query(value = "INSERT INTO keyword_info_50000001_backup (id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,backup_date) SELECT id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,backup_date FROM (SELECT CONCAT(keyword, DATE_FORMAT(CURDATE(), '%Y%m%d')) AS id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,CURDATE() AS backup_date FROM keyword_info_50000001) AS temp WHERE NOT EXISTS (SELECT 1 FROM keyword_info_50000001_backup WHERE id = temp.id)", nativeQuery = true)
+    void backupToBackupTable();
 }

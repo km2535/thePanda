@@ -14,6 +14,7 @@ import com.panda.thePanda.entity.keyword_info.KeywordInfo50000006Entity;
 import com.panda.thePanda.entity.keyword_info.KeywordInfo50000007Entity;
 import com.panda.thePanda.entity.keyword_info.KeywordInfo50000008Entity;
 import com.panda.thePanda.entity.keyword_info.KeywordInfo50000009Entity;
+import com.panda.thePanda.entity.keyword_info_base_name.KeywordInfoCustomEntity;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000000Repository;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000001Repository;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000002Repository;
@@ -24,6 +25,7 @@ import com.panda.thePanda.repository.keyword_info.KeywordInfo50000006Repository;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000007Repository;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000008Repository;
 import com.panda.thePanda.repository.keyword_info.KeywordInfo50000009Repository;
+import com.panda.thePanda.repository.keyword_info_base_name.KeywordInfoCustomRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +42,7 @@ public class GetKeywordService {
   private final KeywordInfo50000007Repository keywordInfo50000007Repository;
   private final KeywordInfo50000008Repository keywordInfo50000008Repository;
   private final KeywordInfo50000009Repository keywordInfo50000009Repository;
+  private final KeywordInfoCustomRepository keywordInfoCustomRepository;
 
   public List<KeywordInfo50000000Entity> getKeywordInfoByCategory50000000() {
     return keywordInfo50000000Repository.getKeyword();
@@ -79,6 +82,50 @@ public class GetKeywordService {
 
   public List<KeywordInfo50000009Entity> getKeywordInfoByCategory50000009() {
     return keywordInfo50000009Repository.getKeyword();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeywordInfoCustom() {
+    return keywordInfoCustomRepository.getKeywordAllCategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000000CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000000CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000001CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000001CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000002CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000002CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000003CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000003CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000004CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000004CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000005CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000005CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000006CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000006CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000007CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000007CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000008CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000008CategoryTop();
+  }
+
+  public List<KeywordInfoCustomEntity> getKeyword50000009CategoryTop() {
+    return keywordInfoCustomRepository.getKeyword50000009CategoryTop();
   }
 
 }

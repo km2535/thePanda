@@ -21,8 +21,6 @@ import lombok.Setter;
 public class KeywordInfo50000003Entity {
 
   @Id
-  @Column(name = "id")
-  private String id;
   @Column(name = "keyword")
   private String keyword;
   @Column(name = "monthly_pc_qc_cnt")

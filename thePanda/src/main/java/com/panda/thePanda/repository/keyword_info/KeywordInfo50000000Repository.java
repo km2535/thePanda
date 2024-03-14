@@ -19,9 +19,8 @@ public interface KeywordInfo50000000Repository extends JpaRepository<KeywordInfo
 
     @Modifying
     @Transactional
-    @Query("INSERT INTO keyword_info_50000000 (id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date) VALUES (:id, :keyword, :monthly_pc_qc_cnt, :monthly_mobile_qc_cnt, :total_qc_cnt, :monthly_ave_pc_cnt,:monthly_ave_mobile_cnt, :comp_idx, CURDATE())")
+    @Query("INSERT INTO keyword_info_50000000 (keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date) VALUES ( :keyword, :monthly_pc_qc_cnt, :monthly_mobile_qc_cnt, :total_qc_cnt, :monthly_ave_pc_cnt,:monthly_ave_mobile_cnt, :comp_idx, CURDATE())")
     void saveInfoCompetition(
-            @Param("id") String id,
             @Param("keyword") String keyword,
             @Param("monthly_pc_qc_cnt") String monthly_pc_qc_cnt,
             @Param("monthly_mobile_qc_cnt") String monthly_mobile_qc_cnt,
@@ -30,4 +29,6 @@ public interface KeywordInfo50000000Repository extends JpaRepository<KeywordInfo
             @Param("monthly_ave_mobile_cnt") String monthly_ave_mobile_cnt,
             @Param("comp_idx") String comp_idx);
 
+    @Query(value = "INSERT INTO keyword_info_50000000_backup (id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,backup_date) SELECT id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,backup_date FROM (SELECT CONCAT(keyword, DATE_FORMAT(CURDATE(), '%Y%m%d')) AS id, keyword, monthly_pc_qc_cnt, monthly_mobile_qc_cnt,total_qc_cnt,monthly_ave_pc_cnt,monthly_ave_mobile_cnt,comp_idx,update_date,CURDATE() AS backup_date FROM keyword_info_50000000) AS temp WHERE NOT EXISTS (SELECT 1 FROM keyword_info_50000000_backup WHERE id = temp.id)", nativeQuery = true)
+    void backupToBackupTable();
 }

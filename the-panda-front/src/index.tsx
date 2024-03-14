@@ -5,6 +5,7 @@ import App from './App';
 import {  RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Landing from 'views/landing';
 import SignUp from 'views/Authentication/signUp';
+import RealTimeDataManager from 'views/admin/realTimedataManager';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     //errorElement: <NotFound />,
     children: [
       { index: true, path: "/", element: <Landing /> }, 
+      {path:"admin", element:<RealTimeDataManager/>},
       {
         path: "auth/sign-up", element: <SignUp/>}
     ],
