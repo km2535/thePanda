@@ -14,7 +14,7 @@ export default function Landing() {
   const navigate = useNavigate();
   const inputRef = useRef<any>();
   const [searchKeyword, setSearchKeyword] = useState({ searchKind: "search", keyword: "" });
-  const [searchType, setSearchType] = useState("trendKeyword");
+  const [searchType, setSearchType] = useState("trend-keyword");
   const [searchTypeForRealTime, setSearchTypeForRealTime] = useState(buttontitle);
   const [categoryiesCopy, setCategoryiesCopy] = useState(categories);
   const [selectedCategory, setSelectedCategory] = useState("00000000");

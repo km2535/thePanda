@@ -18,8 +18,8 @@ public class KeywordInfoCustomEntity {
   @Id
   @Column(name = "keyword")
   private String keyword;
-  @Column(name = "updatedate")
-  private String updatedate;
+  @Column(name = "update_date")
+  private String update_date;
   @Column(name = "createdate")
   private String createdate;
   @Column(name = "total_product_count")

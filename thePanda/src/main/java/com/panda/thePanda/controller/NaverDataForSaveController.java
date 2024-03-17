@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,9 +33,7 @@ public class NaverDataForSaveController {
   @GetMapping("/naver-data/save")
   public Set<String> saveNaverDataCategory500(
       @RequestParam String category) throws IOException, GeneralSecurityException {
-
     return keywordNameService.saveKeyword(category);
-
   }
 
   @Operation(summary = "데이터를 백업합니다.", description = "데이터 백업")
@@ -56,7 +53,7 @@ public class NaverDataForSaveController {
   @Operation(summary = "상품의 카테고리를 가져옵니다.", description = "상품의 카테고리 검색 API")
   @PostMapping("/get-data/product-category")
   public List<String> getProductCategories(
-      @RequestBody ListKeywordAndCategoryDTO requestDto)
+      ListKeywordAndCategoryDTO requestDto)
       throws IOException, GeneralSecurityException {
     return dataCollectionFromBrowser.saveCategory(requestDto);
   }
@@ -64,7 +61,7 @@ public class NaverDataForSaveController {
   @Operation(summary = "상품의 계절성 여부를 가져옵니다.", description = "계절 상품 검색 API")
   @PostMapping("/get-data/product-season")
   public List<String> getIsSeasonProduct(
-      @RequestBody ListKeywordAndCategoryDTO requestDto)
+      ListKeywordAndCategoryDTO requestDto)
       throws IOException, GeneralSecurityException {
     return dataCollectionFromBrowser.savaIsSeason(requestDto);
   }
@@ -72,7 +69,7 @@ public class NaverDataForSaveController {
   @Operation(summary = "키워드 클릭률을 가져옵니다", description = "검색 수, 클릭률 반환")
   @PostMapping("/get-data/product-click")
   public Set<String> getClickCountProduct(
-      @RequestBody ListKeywordAndCategoryDTO requestDto)
+      ListKeywordAndCategoryDTO requestDto)
       throws IOException, GeneralSecurityException {
     return dataCollectionFromBrowser.saveKeywordToCmp(requestDto);
   }
@@ -80,7 +77,7 @@ public class NaverDataForSaveController {
   @Operation(summary = "에러 키워드를 저장합니다.", description = "에러키워드 리스트형태로 저장")
   @PostMapping("/save-error/product")
   public void getErrorList(
-      @RequestBody ListKeywordAndCategoryDTO requestDto)
+      ListKeywordAndCategoryDTO requestDto)
       throws IOException, GeneralSecurityException {
     dataCollectionFromBrowser.saveErrorKeyword(requestDto);
   }

@@ -4,7 +4,9 @@ import { InfoTypeForRealTime, categoryType } from 'types/propsTypes/props-types'
 import { IoIosArrowForward } from "react-icons/io";
 import { categories } from 'types/iconsTypes/icons-types';
 import { buttontitle } from 'types/buttonsTypes/button-types';
+import { BiSolidDownArrow,BiSolidUpArrow } from "react-icons/bi";
 
+import "./style.css";
 //searchType과 selectedCategory를 전달 받아 api를 요청
 export default function InfoBox(props: InfoTypeForRealTime) {
   const [category, setCategory] = useState<string>();
@@ -35,13 +37,16 @@ export default function InfoBox(props: InfoTypeForRealTime) {
         </div>
         <div className='h-[600px] overflow-y-scroll mt-3'> 
           <table className='w-full text-center'>
-            <thead className='sticky top-0 bg-backgroundColor'>
+            <thead className='sticky top-0 bg-backgroundColor z-50'>
             <tr className={'text-informationColor font-thin '}>
               <th className='font-thin sticky'>순위</th>
-              <th className='font-thin sticky'>키워드</th>
-              <th className='font-thin sticky'>검색량</th>
-              <th className='font-thin sticky text-pretty'>경쟁도</th>
-              <th className='font-thin sticky'>하위카테고리</th>
+              <th className='font-thin sticky z-50'>키워드</th>
+              <th className='font-thin sticky z-50'>검색량</th>
+                <th className='font-thin sticky text-pretty'>경쟁도</th>
+                {props.searchType === "rising-keyword" ? 
+                  <th className='font-thin sticky'>변동률</th> : 
+                <th className='font-thin sticky'>하위카테고리</th> 
+                }
             </tr>
             </thead>
             <tbody>
@@ -51,13 +56,15 @@ export default function InfoBox(props: InfoTypeForRealTime) {
             cmpData.map((element,i) => 
               <tr key={i} className={'text-iconsColor font-bold text-lg text-pretty'}>
                 <td className={'w-1/12'}>{i+1}</td>
-                <td className={'w-4/12 text-pretty'}>{element.keyword}</td>
+                <td className={'w-4/12 text-pretty'}>{element.keyword}{element.new_keyword ==="true" ? <sup className={"ml-1 text-xs z-0"}><span className='font-bold '>NEW</span></sup>: ""}</td>
                 <td className={'w-3/12'}>{element.total_qc_cnt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}</td>
                 <td className={'w-1/12'}>{element.comp_idx}</td>
                 <td className={'w-3/12 text-sm '}>
+                  {props.searchType === "rising-keyword" ? <div className={'flex justify-center'}>{Number(element.total_qc_cnt_difference) > 0 ? <> {element.total_qc_cnt_difference_by_percent}<BiSolidUpArrow className='text-green-500 mr-1 ml-1'/></>: Number(element.total_qc_cnt_difference) === 0 ? " - " :<> {element.total_qc_cnt_difference_by_percent}<BiSolidDownArrow className='text-red-500 mr-1 ml-1'/></>}</div>:
                   <div className={'flex justify-center'}>
                     {element.category3 !== "" ? <>{element.category4 !== "" ? element.category4: element.category3}</> : element.category2}
                   </div>
+                  }
                 </td>
               </tr>
               )

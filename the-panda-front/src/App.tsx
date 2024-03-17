@@ -11,7 +11,7 @@ function App() {
      , "키워드 최적화": {"키워드 최적화":"/keyword/optimization"}
      , "순위 추적": {"순위 추적":"/product/tracking"}
      , "시장 분석(쿠팡)": {"시장 분석":"/analysis-coupang/market"}
-     , "상품 분석(쿠팡)": {"시장 분석":"/analysis-coupang/product"}
+     , "상품 분석(쿠팡)": {"상품 분석":"/analysis-coupang/product"}
      , "키워드 셔플": {"키워드 셔플":"/keyword/shuffle"}
     }} />
     <Outlet/>

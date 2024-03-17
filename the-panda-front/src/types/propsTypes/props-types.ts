@@ -22,8 +22,12 @@ export interface categoryType{
   product_name: string,
   top_product_link: string,
   total_product_count: string,
-  update_date: string,
+  total_qc_cnt_difference: string,
+  total_qc_cnt_difference_by_percent: string,
+  new_keyword:string,
+  update_date: string
 }
+
 
 export interface filterType{
   searchMin: number,

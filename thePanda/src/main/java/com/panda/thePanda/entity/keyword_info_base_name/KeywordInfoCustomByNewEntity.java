@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Entity(name = "keyword_info_custom_by_rising")
-public class KeywordInfoCustomByRisingEntity {
+@Entity(name = "keyword_info_custom_by_new")
+public class KeywordInfoCustomByNewEntity {
 
   @Id
   @Column(name = "keyword")
@@ -46,8 +46,6 @@ public class KeywordInfoCustomByRisingEntity {
   private String monthly_mobile_qc_cnt;
   @Column(name = "comp_idx")
   private String comp_idx;
-  @Column(name = "total_qc_cnt_difference")
-  private String total_qc_cnt_difference;
-  @Column(name = "total_qc_cnt_difference_by_percent")
-  private String total_qc_cnt_difference_by_percent;
+  @Column(name = "new_keyword")
+  private String new_keyword;
 }
