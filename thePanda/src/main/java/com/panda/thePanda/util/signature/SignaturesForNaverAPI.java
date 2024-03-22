@@ -20,6 +20,7 @@ public class SignaturesForNaverAPI {
   private static final String HMAC_SHA256 = "HMac-SHA256";
 
   public static String of(String timestamp, String method, String resource, String key) throws SignatureException {
+    // System.out.println(resource);
     return of(timestamp + "." + method + "." + resource, key);
   }
 

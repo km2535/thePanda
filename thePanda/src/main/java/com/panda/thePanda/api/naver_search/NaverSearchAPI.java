@@ -1,23 +1,22 @@
 package com.panda.thePanda.api.naver_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.panda.thePanda.util.signature.SignaturesForNaverAPI;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.panda.thePanda.util.signature.SignaturesForNaverAPI;
-
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class NaverSearchAPI {
   @Value("${NAVER.BASE_URL}")
   private String baseUrl;
@@ -34,10 +33,12 @@ public class NaverSearchAPI {
   private String rltPath = "/keywordstool";
   private String managedPath = "/ncc/managedKeyword";
   private String shoppingPath = "/search/shop";
+  private String estimate = "/estimate/performance/keyword";
 
-  public String requestNaverAPI(String keyword, String apiPath) throws IOException, GeneralSecurityException {
-    String encodedKeyword = encodeKeyword(keyword);
-    // System.out.println(keyword);
+  @SuppressWarnings("null")
+  public String requestNaverAPI(String keyword, String apiPath)
+      throws IOException, GeneralSecurityException, UnirestException {
+    String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
     String times = String.valueOf(System.currentTimeMillis());
     String signature = generateSignature(times, apiPath);
     String urlString = baseUrl;
@@ -48,80 +49,76 @@ public class NaverSearchAPI {
       urlString += managedPath + "?keywords=" + encodedKeyword;
     }
     if (apiPath.equals(shoppingPath)) {
-      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword + "&display=1&start=1";
+      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword + "&display=10&start=1";
     }
-    URL url = new URL(urlString);
-    HttpURLConnection con = null;
+    if (apiPath.equals(estimate)) {
+      urlString += estimate;
+    }
+
+    HttpResponse<JsonNode> response = null;
     if (apiPath.equals(rltPath) || apiPath.equals(managedPath)) {
-      con = setupHttpURLConnection(url, times, signature);
+      response = Unirest.get(urlString)
+          .header("X-Timestamp", times)
+          .header("X-API-KEY", accessKey)
+          .header("X-Customer", customerId)
+          .header("X-Signature", signature)
+          .asJson();
     }
     if (apiPath.equals(shoppingPath)) {
-      con = setupHttpURLConnection(url);
+      response = Unirest.get(urlString)
+          .header("X-Naver-Client-Id", clientId)
+          .header("X-Naver-Client-Secret", clientSecret)
+          .asJson();
+    }
+    if (apiPath.equals(estimate)) {
+      JSONObject body = new JSONObject();
+      List<Integer> bid = new ArrayList<>();
+      bid.add(100);
+      bid.add(200);
+      bid.add(300);
+      bid.add(400);
+      bid.add(500);
+      bid.add(600);
+      bid.add(700);
+      bid.add(800);
+      body.put("device", "BOTH");
+      body.put("keywordplus", true);
+      body.put("key", "의자");
+      body.put("bids", bid);
+      response = Unirest.post(urlString)
+          .header("X-Timestamp", times)
+          .header("X-API-KEY", accessKey)
+          .header("X-Customer", customerId)
+          .header("X-Signature", signature)
+          .header("Content-Type", "application/json")
+          .body(body)
+          .asJson();
     }
 
-    return getResponse(con).toString();
-  }
-
-  private String encodeKeyword(String keyword) {
-    try {
-      return URLEncoder.encode(keyword, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException("인코딩 실패.", e);
-    }
+    return response.getBody().toString();
   }
 
   private String generateSignature(String times, String apiPath) throws GeneralSecurityException {
-    return SignaturesForNaverAPI.of(times, "GET", apiPath, secretKey);
-  }
-
-  private HttpURLConnection setupHttpURLConnection(URL url, String times, String signature) throws IOException {
-    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-    con.setRequestMethod("GET");
-    con.setRequestProperty("X-Timestamp", times);
-    con.setRequestProperty("X-API-KEY", accessKey);
-    con.setRequestProperty("X-Customer", customerId);
-    con.setRequestProperty("X-Signature", signature);
-    return con;
-  }
-
-  private HttpURLConnection setupHttpURLConnection(URL url) throws IOException {
-    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-    con.setRequestMethod("GET");
-    con.setRequestProperty("X-Naver-Client-Id", clientId);
-    con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-    return con;
-  }
-
-  private StringBuffer getResponse(HttpURLConnection con) throws IOException {
-    int responseCode = con.getResponseCode();
-    BufferedReader br;
-    // System.out.println("responseCode : " + responseCode);
-    if (responseCode == 200) {
-      br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+    if (apiPath.equals(estimate)) {
+      return SignaturesForNaverAPI.of(times, "POST", apiPath, secretKey);
     } else {
-      br = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+      return SignaturesForNaverAPI.of(times, "GET", apiPath, secretKey);
     }
-    StringBuffer response = new StringBuffer();
-    String inputLine;
-
-    while ((inputLine = br.readLine()) != null) {
-      response.append(inputLine);
-    }
-    br.close();
-    return response;
   }
 
-  // 기존 getRltKey와 getKeywordInfo 메소드는 이제 다음처럼 편리하게 호출될 수 있습니다:
-
-  public String getRltKey(String keyword) throws IOException, GeneralSecurityException {
+  public String getRltKey(String keyword) throws IOException, GeneralSecurityException, UnirestException {
     return requestNaverAPI(keyword, rltPath);
   }
 
-  public String getKeywordInfo(String keyword) throws IOException, GeneralSecurityException {
+  public String getKeywordInfo(String keyword) throws IOException, GeneralSecurityException, UnirestException {
     return requestNaverAPI(keyword, managedPath);
   }
 
-  public String getShopInfo(String keyword) throws IOException, GeneralSecurityException {
+  public String getShopInfo(String keyword) throws IOException, GeneralSecurityException, UnirestException {
     return requestNaverAPI(keyword, shoppingPath);
+  }
+
+  public String getAdKeyword(String keyword) throws IOException, GeneralSecurityException, UnirestException {
+    return requestNaverAPI(keyword, estimate);
   }
 }

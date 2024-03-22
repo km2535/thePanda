@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.service.crawler.DataLabTopKeywordCrawler;
 
@@ -27,7 +28,7 @@ public class KeywordNameService {
   private final KeywordInfoBaseMethod keywordInfoBaseMethod;
   private final KeywordInfoMethod keywordInfoMethod;
 
-  public Set<String> saveKeyword(String category) throws IOException, GeneralSecurityException {
+  public Set<String> saveKeyword(String category) throws IOException, GeneralSecurityException, UnirestException {
     List<String> list = new ArrayList<>();
     Set<String> result = new HashSet<>();
     List<String> listByKeywordInfoSeason = new ArrayList<>();
@@ -92,7 +93,8 @@ public class KeywordNameService {
     return apiList;
   }
 
-  private void saveCategory(String category, List<String> list) throws IOException, GeneralSecurityException {
+  private void saveCategory(String category, List<String> list)
+      throws IOException, GeneralSecurityException, UnirestException {
     ObjectMapper objectMapper = new ObjectMapper();
     Stack<String> stackForKeywordInfo = new Stack<>();
     for (String keyword : list) {
@@ -167,7 +169,7 @@ public class KeywordNameService {
   }
 
   private void savaIsSeason(List<String> listByKeywordInfoSeason, String category)
-      throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException, UnirestException {
     List<String> seasonKeyword = new ArrayList<>();
     // 100개씩 나누어 저장
     int size = listByKeywordInfoSeason.size();

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.dto.ListKeywordAndCategoryDTO;
 import com.panda.thePanda.service.crawler.DataLabTopKeywordCrawler;
@@ -32,7 +33,7 @@ public class NaverDataForSaveController {
   @Operation(summary = "카테고리 별 500 키워드의 정보를 저장", description = "카테고리 별 키워드를 검색 후 데이터를 저장합니다.")
   @GetMapping("/naver-data/save")
   public Set<String> saveNaverDataCategory500(
-      @RequestParam String category) throws IOException, GeneralSecurityException {
+      @RequestParam String category) throws IOException, GeneralSecurityException, UnirestException {
     return keywordNameService.saveKeyword(category);
   }
 
@@ -54,7 +55,7 @@ public class NaverDataForSaveController {
   @PostMapping("/get-data/product-category")
   public List<String> getProductCategories(
       ListKeywordAndCategoryDTO requestDto)
-      throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException, UnirestException {
     return dataCollectionFromBrowser.saveCategory(requestDto);
   }
 
@@ -62,7 +63,7 @@ public class NaverDataForSaveController {
   @PostMapping("/get-data/product-season")
   public List<String> getIsSeasonProduct(
       ListKeywordAndCategoryDTO requestDto)
-      throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException, UnirestException {
     return dataCollectionFromBrowser.savaIsSeason(requestDto);
   }
 

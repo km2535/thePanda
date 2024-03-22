@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.dto.ListKeywordAndCategoryDTO;
 import com.panda.thePanda.repository.keyword_info_base.KeywordInfoBaseErrorRepository;
@@ -67,7 +68,7 @@ public class DataCollectionFromBrowser {
 
   // 2. 카테고리 상품 검색하고 데이터베이스에 저장하기
   public List<String> saveCategory(ListKeywordAndCategoryDTO list)
-      throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException, UnirestException {
     ObjectMapper objectMapper = new ObjectMapper();
     Stack<String> stackForKeywordInfo = new Stack<>();
     List<String> errorKeyword = new ArrayList<>();
@@ -138,7 +139,7 @@ public class DataCollectionFromBrowser {
 
   // 계절성 상품 여부 저장
   public List<String> savaIsSeason(ListKeywordAndCategoryDTO keywordAndCategoryDTO)
-      throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException, UnirestException {
     List<String> seasonKeyword = new ArrayList<>();
     List<String> errorKeyword = new ArrayList<>();
     // 100개씩 나누어 저장

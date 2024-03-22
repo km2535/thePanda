@@ -15,11 +15,11 @@ import lombok.Data;
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

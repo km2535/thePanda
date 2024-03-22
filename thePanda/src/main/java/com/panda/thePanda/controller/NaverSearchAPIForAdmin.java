@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.service.crawler.DataLabTopKeywordCrawler;
 
@@ -32,7 +33,7 @@ public class NaverSearchAPIForAdmin {
   @Operation(summary = "키워드와 연관키워드들의 월간 키워드 검색량", description = "키워드와 연관 키워드들의 월간 키워드 검색량과 경쟁률를 리턴합니다.")
   @PostMapping("/naver-search/keyword")
   public StringBuffer getNaverSearchAPI(
-      @RequestBody String[] keywords) throws IOException, GeneralSecurityException {
+      @RequestBody String[] keywords) throws IOException, GeneralSecurityException, UnirestException {
     StringBuffer response = new StringBuffer();
     for (String keyword : keywords) {
       response.append(naverSearchAPI.getRltKey(keyword));
@@ -43,7 +44,7 @@ public class NaverSearchAPIForAdmin {
   @Operation(summary = "카테고리와 총 상품 수, 브랜드", description = "검색 한 키워드의 총 상품수와 카테고리를 리턴합니다. ")
   @PostMapping("/naver-shopping/keyword")
   public StringBuffer getNaverSearchShopAPI(
-      @RequestBody String[] keywords) throws IOException, GeneralSecurityException {
+      @RequestBody String[] keywords) throws IOException, GeneralSecurityException, UnirestException {
     StringBuffer response = new StringBuffer();
     for (String keyword : keywords) {
       response.append(naverSearchAPI.getShopInfo(keyword));
@@ -51,10 +52,21 @@ public class NaverSearchAPIForAdmin {
     return response;
   }
 
+  @Operation(summary = "광고 비용", description = "검색 한 키워드의 광고 비용. ")
+  @PostMapping("/naver-shopping/ad-keyword")
+  public StringBuffer getNaverAdKeyword(
+      @RequestBody String[] keywords) throws IOException, GeneralSecurityException, UnirestException {
+    StringBuffer response = new StringBuffer();
+    for (String keyword : keywords) {
+      response.append(naverSearchAPI.getAdKeyword(keyword));
+    }
+    return response;
+  }
+
   @Operation(summary = "계절성 키워드 확인", description = "성인 키워드, 금지, 계절성을 여부를 리턴합니다. 키워드 간 콤마로 구분하여 요청 받습니다.")
   @PostMapping("/naver-managed/keyword")
   public StringBuffer getNaverSearchManagedKeywordAPI(
-      @RequestBody String keyword) throws IOException, GeneralSecurityException {
+      @RequestBody String keyword) throws IOException, GeneralSecurityException, UnirestException {
     StringBuffer response = new StringBuffer();
     response.append(naverSearchAPI.getKeywordInfo(keyword));
 
