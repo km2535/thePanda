@@ -43,11 +43,13 @@ public class KeywordSaveService {
 
     // 모든 데이터를 저장한다.
     List<KeywordSaveEntity> entities = new ArrayList<>();
-    for (String keyword : keywords) {
+    for (int i = 0; i < keywords.size(); i++) {
       KeywordSaveEntity entity = new KeywordSaveEntity();
-      entity.setId(keyword + category + formattedcurrentDateForId); // 어떤 방식으로든 id를 생성
+      String keyword = keywords.get(i);
+      entity.setId(keyword + category + formattedcurrentDateForId);
       entity.setKeyword(keyword);
       entity.setCategory_id(category);
+      entity.setRank(i + 1);
       entity.setCreate_date(formattedcurrentDate);
       entities.add(entity);
     }

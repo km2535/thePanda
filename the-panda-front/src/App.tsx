@@ -13,8 +13,10 @@ function App() {
      , "시장 분석(쿠팡)": {"시장 분석":"/analysis-coupang/market"}
      , "상품 분석(쿠팡)": {"상품 분석":"/analysis-coupang/product"}
      , "키워드 셔플": {"키워드 셔플":"/keyword/shuffle"}
-    }} />
-    <Outlet/>
+      }} />
+      <div className={'max-w-[1250px] m-auto'}>
+      <Outlet/>
+    </div>
     </>
   );
 }

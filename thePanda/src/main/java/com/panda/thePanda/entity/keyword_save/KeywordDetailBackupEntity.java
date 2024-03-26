@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "keyword_result")
-@Table(name = "keyword_result")
-public class KeywordDetailEntity {
+@Entity(name = "keyword_result_backup")
+@Table(name = "keyword_result_backup")
+public class KeywordDetailBackupEntity {
   @Id
   @Column(name = "id")
   private String id;

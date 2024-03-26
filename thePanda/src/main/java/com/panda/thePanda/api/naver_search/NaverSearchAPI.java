@@ -49,7 +49,8 @@ public class NaverSearchAPI {
       urlString += managedPath + "?keywords=" + encodedKeyword;
     }
     if (apiPath.equals(shoppingPath)) {
-      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword + "&display=10&start=1";
+      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
+          + "&display=10&start=1&exclude=cbshop";
     }
     if (apiPath.equals(estimate)) {
       urlString += estimate;
@@ -81,9 +82,16 @@ public class NaverSearchAPI {
       bid.add(600);
       bid.add(700);
       bid.add(800);
+      bid.add(900);
+      bid.add(1000);
+      bid.add(1100);
+      bid.add(1200);
+      bid.add(1300);
+      bid.add(1400);
+      bid.add(1500);
       body.put("device", "BOTH");
       body.put("keywordplus", true);
-      body.put("key", "의자");
+      body.put("key", keyword);
       body.put("bids", bid);
       response = Unirest.post(urlString)
           .header("X-Timestamp", times)
@@ -93,6 +101,7 @@ public class NaverSearchAPI {
           .header("Content-Type", "application/json")
           .body(body)
           .asJson();
+      System.out.println(response.getBody());
     }
 
     return response.getBody().toString();

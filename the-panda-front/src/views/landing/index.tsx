@@ -13,7 +13,7 @@ import { filterType } from 'types/propsTypes/props-types';
 export default function Landing() {
   const navigate = useNavigate();
   const inputRef = useRef<any>();
-  const [searchKeyword, setSearchKeyword] = useState({ searchKind: "search", keyword: "" });
+  const [searchKeyword, setSearchKeyword] = useState({ searchKind: "analysis", keyword: "" });
   const [searchType, setSearchType] = useState("trend-keyword");
   const [searchTypeForRealTime, setSearchTypeForRealTime] = useState(buttontitle);
   const [categoryiesCopy, setCategoryiesCopy] = useState(categories);
@@ -84,7 +84,7 @@ export default function Landing() {
     setSearchTypeForRealTimeByCall(e);
   };
   return (
-    <div className="w-8/12 m-auto mt-10 overflow-hidden">
+    <div className="w-full m-auto mt-10 overflow-hidden">
       <div className="w-full h-full overflow-hidden">
         <section className="w-full h-[200px] mt-15">
           <div className="bg-logo w-[800px] m-auto h-[200px] bg-no-repeat bg-cover bg-center cursor-pointer" onClick={mainLogo}></div>
