@@ -3,26 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { categories } from "types/iconsTypes/icons-types"
 
 export const DataCollector = async (setMessage:React.Dispatch<React.SetStateAction<string>>) => {
-  //api 요청 로직...
-  // for (let i = 0; i < categories.length; i++) {
-  //   try {  
-  //     const category = categories[i].categoryId;
-  //     if (categories[i].categoryId !== "00000000") {
-  //       dataLabRequest(category, setMessage)
-  //       .then((response) => getCategory(category, response.data, setMessage)
-  //       .then(() => getIsSeason(category, response.data, setMessage))
-  //       .then(() => getClickRate(category, response.data, setMessage)
-  //       .then((response) => getClickRate(category, response.data, setMessage)
-  //       .then((response) => getClickRate(category, response.data, setMessage)))))
-  //       .then(()=> dataBackUp(category,setMessage)).then(()=>setMessage(`${category} 완료`))
-  //     }
-  //   } catch (error) {
-      
-  //   }
-  // }
   
-  //getCategory("50000007", ["캠ㅍ핑의자"],setMessage)
-  //포스트 맨으로 검사
   for (let i = 0; i < categories.length; i++) {
     const category = categories[i].categoryId;
     if (category !== "00000000") {

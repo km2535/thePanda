@@ -22,7 +22,7 @@ public class KeywordSaveEntity {
   @Column(name = "keyword")
   private String keyword;
   @Column(name = "category_id")
-  private String category_id;
+  private Integer category_id;
   @Column(name = "rank")
   private Integer rank;
   @Column(name = "create_date")

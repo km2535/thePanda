@@ -20,10 +20,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.dto.ListKeywordAndCategoryDTO;
 import com.panda.thePanda.entity.keyword_save.KeywordByProduct;
-import com.panda.thePanda.entity.keyword_save.KeywordDetailBackupEntity;
 import com.panda.thePanda.entity.keyword_save.KeywordDetailEntity;
 import com.panda.thePanda.repository.keyword_save.KeywordByProductsRepository;
-import com.panda.thePanda.repository.keyword_save.KeywordDetailBackupRepository;
 import com.panda.thePanda.repository.keyword_save.KeywordDetailRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,11 +32,15 @@ public class KeywordDetailSaveAndDeleteService {
   private final NaverSearchAPI searchAPI;
   private final KeywordDetailRepository detailRepository;
   private final KeywordByProductsRepository productsRepository;
-  private final KeywordDetailBackupRepository backupRepository;
+
   private Integer MAX_DATE_IN_DETAIL = 4;
 
   public void deleteAllDetailData() {
     detailRepository.deleteAllInBatch();
+  }
+
+  public void deleteAllProductData() {
+    productsRepository.deleteAllInBatch();
   }
 
   public Set<String> saveRltKeyword(ListKeywordAndCategoryDTO keywordAndCategoryDTO)
@@ -46,10 +48,8 @@ public class KeywordDetailSaveAndDeleteService {
     // 에러 키워드는 중복 될 수 있다. 따라서 중복된 키워드를 제외하도록 Set으로 반환한다.
     Set<String> savedKeyword = new HashSet<>();
     LocalDate currentDate = LocalDate.now();
-    DateTimeFormatter formatterId = DateTimeFormatter.ofPattern("yyMMdd");
     DateTimeFormatter formatterIdForDB = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     // 사전 저장된 데이터를 가지고 온다.
-    String formattedcurrentDateForId = currentDate.format(formatterId);
     String formattedcurrentDateForDB = currentDate.format(formatterIdForDB);
     // 요청 후 대기 시간을 임의로 만든다.
     long sleepMilliSeconds = 450;
@@ -78,7 +78,7 @@ public class KeywordDetailSaveAndDeleteService {
           String searchKeyword = itemNode.get("relKeyword").asText();
           String monthly_pc_qc_cnt = itemNode.get("monthlyPcQcCnt").asText();
           String monthly_mobile_qc_cnt = itemNode.get("monthlyMobileQcCnt").asText();
-          String total_qc_cnt = (Integer.parseInt(monthly_pc_qc_cnt) + Integer.parseInt(monthly_mobile_qc_cnt)) + "";
+          int total_qc_cnt = (Integer.parseInt(monthly_pc_qc_cnt) + Integer.parseInt(monthly_mobile_qc_cnt));
           String monthly_ave_pc_cnt = itemNode.get("monthlyAvePcCtr").asText();
           String monthly_ave_mobile_cnt = itemNode.get("monthlyAveMobileCtr").asText();
           String comp_idx = itemNode.get("compIdx").asText();
@@ -87,7 +87,7 @@ public class KeywordDetailSaveAndDeleteService {
           String update_date = formattedcurrentDateForDB;
           KeywordDetailEntity entity = new KeywordDetailEntity();
 
-          entity.setId(searchKeyword + keywordAndCategoryDTO.getCategory() + formattedcurrentDateForId);
+          entity.setId(searchKeyword + keywordAndCategoryDTO.getCategory());
           entity.setKeyword(searchKeyword);
           entity.setMonthly_pc_qc_cnt(monthly_pc_qc_cnt);
           entity.setMonthly_mobile_qc_cnt(monthly_mobile_qc_cnt);
@@ -120,18 +120,19 @@ public class KeywordDetailSaveAndDeleteService {
   }
 
   // top500의 키워드들을 가져와서 카테고리를 요청하고 db에 저장하는 로직
-  public String saveCategoryProduct() throws IOException, GeneralSecurityException, UnirestException {
+  public String saveCategoryProduct(Integer _categoryId)
+      throws IOException, GeneralSecurityException, UnirestException {
     // 데이터를 가져온다.
-    List<KeywordDetailEntity> topKeywords = detailRepository.findAll();
+    List<KeywordDetailEntity> topKeywords = detailRepository.findByCategoryId(_categoryId);
     // 가져온 데이터를 기반으로 카테고리를 요청한다.
     ObjectMapper objectMapper = new ObjectMapper();
     for (KeywordDetailEntity topKeyword : topKeywords) {
       String keyword = topKeyword.getKeyword();
-      String categoryId = topKeyword.getCategory_id();
+      Integer categoryId = topKeyword.getCategory_id();
       String checkTop = topKeyword.getCheck_top();
       String monthly_pc_qc_cnt = topKeyword.getMonthly_pc_qc_cnt();
       String monthly_mobile_qc_cnt = topKeyword.getMonthly_mobile_qc_cnt();
-      String total_qc_cnt = topKeyword.getTotal_qc_cnt();
+      int total_qc_cnt = topKeyword.getTotal_qc_cnt();
       String monthly_ave_pc_cnt = topKeyword.getMonthly_ave_pc_cnt();
       String monthly_ave_mobile_cnt = topKeyword.getMonthly_ave_mobile_cnt();
       String comp_idx = topKeyword.getComp_idx();
@@ -157,7 +158,7 @@ public class KeywordDetailSaveAndDeleteService {
         // 저장할 데이터
         String total_product_count = total.asText();
         String product_name = itemNode.get("title").asText();
-        String top_product_link = itemNode.get("link").asText();
+        String top_product_link = itemNode.get("image").asText();
         Integer lprice = itemNode.get("lprice").asInt();
         Integer hprice = itemNode.get("hprice").asInt();
         String category1 = itemNode.get("category1").asText();
@@ -193,7 +194,7 @@ public class KeywordDetailSaveAndDeleteService {
         detailRepository.save(entity);
 
         try {
-          Thread.sleep(300);
+          Thread.sleep(100);
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
         }
@@ -205,6 +206,8 @@ public class KeywordDetailSaveAndDeleteService {
         continue;
       } catch (DataIntegrityViolationException e) {
         System.out.println(keyword + "는 이미 존재합니다.");
+        continue;
+      } catch (Exception e) {
         continue;
       }
 
@@ -308,14 +311,18 @@ public class KeywordDetailSaveAndDeleteService {
   }
 
   @Transactional
-  public void save_ad_keyword_cost() throws IOException, GeneralSecurityException, UnirestException {
-    // TODO : 광고 비용 저장
-    // 모든 데이터 가져오기
-    List<KeywordDetailEntity> result = detailRepository.findAll();
+  public String save_ad_keyword_cost(Integer category_id)
+      throws IOException, GeneralSecurityException, UnirestException {
+    List<KeywordDetailEntity> result = detailRepository.findByCategoryId(category_id);
     for (KeywordDetailEntity keywordDetail : result) {
       ObjectMapper objectMapperForKeyword = new ObjectMapper();
       String keyword = keywordDetail.getKeyword();
       String jsonData = searchAPI.getAdKeyword(keyword);
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
       try {
         JsonNode jsonNode = objectMapperForKeyword.readTree(jsonData);
         // jsonNode의 100개 씩 만들어진 데이터를 읽음.
@@ -328,8 +335,8 @@ public class KeywordDetailSaveAndDeleteService {
               break;
             }
           }
-          System.out.println(minimumCost);
-          // TODO : 데이터를 업데이트하는 코드 작성
+          System.out.println(keyword + " 저장");
+          detailRepository.updateAdCostByKeyword(minimumCost, keywordDetail.getId());
 
           if (minimumCost != 0)
             break;
@@ -338,40 +345,7 @@ public class KeywordDetailSaveAndDeleteService {
         System.out.println(e);
       }
     }
+    return "ok";
   }
 
-  @Transactional
-  public void backup_data() {
-    // keyword_result의 모든 데이터를 가져온다.
-    List<KeywordDetailEntity> result = detailRepository.findAll();
-
-    for (KeywordDetailEntity origin : result) {
-      KeywordDetailBackupEntity target = new KeywordDetailBackupEntity();
-      target.setId(origin.getId());
-      target.setKeyword(origin.getKeyword());
-      target.setTotal_product_count(origin.getTotal_product_count());
-      target.setTop_product_link(origin.getTop_product_link());
-      target.setCategory1(origin.getCategory1());
-      target.setCategory2(origin.getCategory2());
-      target.setCategory3(origin.getCategory3());
-      target.setCategory4(origin.getCategory4());
-      target.setBrand(origin.getBrand());
-      target.setProduct_name(origin.getProduct_name());
-      target.setIs_season(origin.getIs_season());
-      target.setMonthly_pc_qc_cnt(origin.getMonthly_pc_qc_cnt());
-      target.setMonthly_mobile_qc_cnt(origin.getMonthly_mobile_qc_cnt());
-      target.setTotal_qc_cnt(origin.getTotal_qc_cnt());
-      target.setMonthly_ave_pc_cnt(origin.getMonthly_ave_pc_cnt());
-      target.setMonthly_ave_mobile_cnt(origin.getMonthly_ave_mobile_cnt());
-      target.setComp_idx(origin.getComp_idx());
-      target.setCheck_top(origin.getCheck_top());
-      target.setAd_cost(origin.getAd_cost());
-      target.setLprice(origin.getLprice());
-      target.setHprice(origin.getHprice());
-      target.setCategory_id(origin.getCategory_id());
-      target.setUpdate_date(origin.getUpdate_date());
-      target.setCreate_date(origin.getCreate_date());
-      backupRepository.save(target);
-    }
-  }
 }

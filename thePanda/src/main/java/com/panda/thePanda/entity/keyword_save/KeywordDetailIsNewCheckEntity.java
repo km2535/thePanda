@@ -3,7 +3,6 @@ package com.panda.thePanda.entity.keyword_save;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "keyword_result")
-@Table(name = "keyword_result")
-public class KeywordDetailEntity {
+@Entity(name = "keyword_result_is_new_add")
+public class KeywordDetailIsNewCheckEntity {
   @Id
   @Column(name = "id")
   private String id;
@@ -58,7 +56,7 @@ public class KeywordDetailEntity {
   private String monthly_mobile_qc_cnt;
   @Null
   @Column(name = "total_qc_cnt", nullable = true)
-  private Integer total_qc_cnt;
+  private String total_qc_cnt;
   @Null
   @Column(name = "monthly_ave_pc_cnt", nullable = true)
   private String monthly_ave_pc_cnt;
@@ -89,4 +87,7 @@ public class KeywordDetailEntity {
   @Null
   @Column(name = "create_date", nullable = true)
   private String create_date;
+  @Null
+  @Column(name = "is_new", nullable = false)
+  private boolean isNew;
 }

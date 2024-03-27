@@ -76,7 +76,7 @@ public class NaverSearchAPIForAdmin {
   @Operation(summary = "인기 검색어 받기 (top 500 키워드)", description = "페이지와 카테고리를 입력 받아 상위 키워드를 검색하여 리스트를 전달합니다.")
   @GetMapping("/page-by/top-keyword")
   public List<String> getDataLabTopKeywordByCategoryAndPage(
-      @RequestParam String category, int page, int requireMilliSeconds) throws IOException {
+      @RequestParam int category, int page, int requireMilliSeconds) throws IOException {
     List<String> response = new ArrayList<>();
     for (int i = 1; i < page + 1; i++) {
       response.addAll(dataLabTopKeywordCrawler.crawlTopKeywordByCategory(category, i));

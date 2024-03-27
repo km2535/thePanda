@@ -74,21 +74,9 @@ public class NaverSearchAPI {
     if (apiPath.equals(estimate)) {
       JSONObject body = new JSONObject();
       List<Integer> bid = new ArrayList<>();
-      bid.add(100);
-      bid.add(200);
-      bid.add(300);
-      bid.add(400);
-      bid.add(500);
-      bid.add(600);
-      bid.add(700);
-      bid.add(800);
-      bid.add(900);
-      bid.add(1000);
-      bid.add(1100);
-      bid.add(1200);
-      bid.add(1300);
-      bid.add(1400);
-      bid.add(1500);
+      for (int i = 1; i < 90; i++) {
+        bid.add(i * 50);
+      }
       body.put("device", "BOTH");
       body.put("keywordplus", true);
       body.put("key", keyword);
@@ -101,7 +89,7 @@ public class NaverSearchAPI {
           .header("Content-Type", "application/json")
           .body(body)
           .asJson();
-      System.out.println(response.getBody());
+      // System.out.println(response.getBody());
     }
 
     return response.getBody().toString();

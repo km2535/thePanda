@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class DataLabTopKeywordCrawler {
 
-	public List<String> crawlTopKeywordByCategory(String category, int page) {
+	public List<String> crawlTopKeywordByCategory(int category, int page) {
 		List<String> result = new ArrayList<String>();
 		String referer = "https://datalab.naver.com";
 		String jsonData = "";
@@ -70,7 +70,7 @@ public class DataLabTopKeywordCrawler {
 	}
 
 	// 탑 키워드 클릭량
-	public Map<String, Integer> getTopKeywordOfRate(String category, String keyword) {
+	public Map<String, Integer> getTopKeywordOfRate(Integer category, String keyword) {
 		LocalDate currentDate = LocalDate.now();
 		LocalDate fewDaysAgoDate = currentDate.minusDays(2);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

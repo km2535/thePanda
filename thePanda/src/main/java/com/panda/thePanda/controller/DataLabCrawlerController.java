@@ -29,10 +29,10 @@ public class DataLabCrawlerController {
 
 	@Operation(summary = "카테고리 별 상위 키워드 검색", description = "카테고리를 입력받아 상위 키워드를 검색하여 리스트를 전달합니다.")
 	@PostMapping("/top/keyword")
-	public Map<String, List<String>> getDataLabTopKeywordByCategory(
-			@RequestBody String[] categorys) throws IOException {
-		Map<String, List<String>> response = new HashMap<>();
-		for (String item : categorys) {
+	public Map<Integer, List<String>> getDataLabTopKeywordByCategory(
+			@RequestBody int[] categorys) throws IOException {
+		Map<Integer, List<String>> response = new HashMap<>();
+		for (int item : categorys) {
 			response.put(item, dataLabTopKeywordCrawler.crawlTopKeywordByCategory(item, 1));
 		}
 		return response;
@@ -42,7 +42,7 @@ public class DataLabCrawlerController {
 			+ "변화량 차이를 리스트로 전달합니다.")
 	@PostMapping("/top/keyword-rate")
 	public List<Map<String, Integer>> getDataLabTopKeywordRateUpdate(
-			@RequestParam String category, int page) throws IOException {
+			@RequestParam Integer category, int page) throws IOException {
 		List<Map<String, Integer>> response = new ArrayList<>();
 		List<String> list = new ArrayList<String>();
 		for (int i = 1; i < page + 1; i++) {

@@ -58,7 +58,7 @@ public class KeywordDetailBackupEntity {
   private String monthly_mobile_qc_cnt;
   @Null
   @Column(name = "total_qc_cnt", nullable = true)
-  private String total_qc_cnt;
+  private Integer total_qc_cnt;
   @Null
   @Column(name = "monthly_ave_pc_cnt", nullable = true)
   private String monthly_ave_pc_cnt;
@@ -82,11 +82,17 @@ public class KeywordDetailBackupEntity {
   private Integer hprice;
   @Null
   @Column(name = "category_id", nullable = true)
-  private String category_id;
+  private Integer category_id;
   @Null
   @Column(name = "update_date", nullable = true)
   private String update_date;
   @Null
   @Column(name = "create_date", nullable = true)
   private String create_date;
+  @Null
+  @Column(name = "is_new", nullable = true)
+  private String is_new;
+  @Null
+  @Column(name = "diff_total_qc_cnt", nullable = true)
+  private Integer diff_total_qc_cnt;
 }

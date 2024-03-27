@@ -1,8 +1,10 @@
+import parse from 'html-react-parser';
 
-const Product = ({productDetail}: any) => {
-  console.log(productDetail)
+const Product = ({ productDetail, productList }: any) => {
+  
   return (
     <div className={'w-full flex'}>
+      {productDetail === "NoData" ? "존재하지 않는 키워드 입니다." :
       <div>
         <section>
           <div>이미지</div>
@@ -12,9 +14,17 @@ const Product = ({productDetail}: any) => {
               <div>{productDetail?.total_qc_cnt}</div>
             </div>
             <div>
-              <div>
-                {productDetail?.category1} &gt; {productDetail?.category2} &gt;
-                {productDetail?.category3} &gt; {productDetail?.category4}
+                <div>
+                  {productDetail?.category1}
+                  
+                  {productDetail?.category2 ? " > " : ""}
+                  {productDetail?.category2}
+                  
+                  {productDetail?.category3 ? " > " : ""}
+                  {productDetail?.category3}
+                  
+                  {productDetail?.category4 ? " > " : ""}
+                  {productDetail?.category4}
               </div>
               <div>{productDetail?.comp_idx}</div>
             </div>
@@ -53,10 +63,16 @@ const Product = ({productDetail}: any) => {
            <div>차트(1개월 / 1년 / 3년)</div>
         </section>
         <section>
-          <div>네이버 top10</div>
+            <div>네이버 top10
+              {productList.map((v: { title: any; },i: number) =>
+                <div key={v.title + i}>
+                  {parse(v.title)}
+                </div>)}
+            </div>
           <div>쿠팡 top10</div>
         </section>
       </div>
+      }
     </div>
   )
 }

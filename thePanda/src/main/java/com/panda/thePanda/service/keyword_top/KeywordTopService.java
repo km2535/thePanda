@@ -1,4 +1,4 @@
-package com.panda.thePanda.service.keyword_save;
+package com.panda.thePanda.service.keyword_top;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,20 +15,19 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class KeywordSaveService {
+public class KeywordTopService {
   private final DataLabTopKeywordCrawler dataLabTopKeywordCrawler;
   private final KeywordSaveRepository keywordSaveRepository;
+  private final KeywordSaveRepository saveRepository;
 
   public void deleteAllData() {
     keywordSaveRepository.deleteAllInBatch();
   }
 
-  public List<String> searchAndSave(String category) {
+  public List<String> searchAndSave(Integer category) {
     LocalDate currentDate = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    DateTimeFormatter formatterId = DateTimeFormatter.ofPattern("yyMMdd");
     String formattedcurrentDate = currentDate.format(formatter);
-    String formattedcurrentDateForId = currentDate.format(formatterId);
 
     List<String> keywords = new ArrayList<>();
 
@@ -46,7 +45,7 @@ public class KeywordSaveService {
     for (int i = 0; i < keywords.size(); i++) {
       KeywordSaveEntity entity = new KeywordSaveEntity();
       String keyword = keywords.get(i);
-      entity.setId(keyword + category + formattedcurrentDateForId);
+      entity.setId(keyword + category);
       entity.setKeyword(keyword);
       entity.setCategory_id(category);
       entity.setRank(i + 1);
@@ -55,6 +54,16 @@ public class KeywordSaveService {
     }
     keywordSaveRepository.saveAll(entities);
     return keywords;
+  }
+
+  public List<KeywordSaveEntity> getTopKeyword(Integer category_id) {
+    List<KeywordSaveEntity> result = saveRepository.findByCategoryId(category_id);
+    return result;
+  }
+
+  public List<KeywordSaveEntity> getAllTopKeyword() {
+    List<KeywordSaveEntity> result = saveRepository.findOrderByCategoryIdAndRank();
+    return result;
   }
 
 }

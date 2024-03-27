@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListKeywordAndCategoryDTO {
-    private String category;
+    private Integer category;
     private List<String> list;
 }

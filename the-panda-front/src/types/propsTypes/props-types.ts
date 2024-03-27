@@ -3,6 +3,8 @@ export interface InfoTypeForRealTime{
   selectedCategory: string,
   dataFilter : filterType
 }
+
+
 export interface categoryType{
   comp_idx : string,
   id : string,
@@ -11,7 +13,7 @@ export interface categoryType{
   monthly_ave_pc_cnt: string,
   monthly_mobile_qc_cnt: string,
   monthly_pc_qc_cnt: string,
-  total_qc_cnt: string,
+  total_qc_cnt: number,
   brand: string,
   category1: string,
   category2: string,
@@ -22,9 +24,8 @@ export interface categoryType{
   product_name: string,
   top_product_link: string,
   total_product_count: string,
-  total_qc_cnt_difference: string,
-  total_qc_cnt_difference_by_percent: string,
-  new_keyword:string,
+  diff_total_qc_cnt: number,
+  is_new:string,
   update_date: string
 }
 

@@ -56,11 +56,11 @@ export default function InfoBox(props: InfoTypeForRealTime) {
             cmpData.map((element,i) => 
               <tr key={i} className={'text-iconsColor font-bold text-lg text-pretty'}>
                 <td className={'w-1/12'}>{i+1}</td>
-                <td className={'w-4/12 text-pretty'}>{element.keyword}{element.new_keyword ==="true" ? <sup className={"ml-1 text-xs z-0"}><span className='font-bold '>NEW</span></sup>: ""}</td>
+                <td className={'w-4/12 text-pretty'}>{element.keyword}{props.searchType === "new-keyword" && element.is_new ==="true" ? <sup className={"ml-1 text-xs z-0"}><span className='font-bold '>NEW</span></sup>: ""}</td>
                 <td className={'w-3/12'}>{element.total_qc_cnt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}</td>
                 <td className={'w-1/12'}>{element.comp_idx}</td>
                 <td className={'w-3/12 text-sm '}>
-                  {props.searchType === "rising-keyword" ? <div className={'flex justify-center'}>{Number(element.total_qc_cnt_difference) > 0 ? <> {element.total_qc_cnt_difference_by_percent}<BiSolidUpArrow className='text-green-500 mr-1 ml-1'/></>: Number(element.total_qc_cnt_difference) === 0 ? " - " :<> {element.total_qc_cnt_difference_by_percent}<BiSolidDownArrow className='text-red-500 mr-1 ml-1'/></>}</div>:
+                  {props.searchType === "rising-keyword" ? <div className={'flex justify-center'}>{element.diff_total_qc_cnt > 0 ? <> {((element.total_qc_cnt - element.diff_total_qc_cnt)/element.total_qc_cnt).toFixed(2) }<BiSolidUpArrow className='text-green-500 mr-1 ml-1'/></>: element.diff_total_qc_cnt === 0 ? " - " :<> {((element.total_qc_cnt - element.diff_total_qc_cnt)/element.total_qc_cnt).toFixed(2) }<BiSolidDownArrow className='text-red-500 mr-1 ml-1'/></>}</div>:
                   <div className={'flex justify-center'}>
                     {element.category3 !== "" ? <>{element.category4 !== "" ? element.category4: element.category3}</> : element.category2}
                   </div>
