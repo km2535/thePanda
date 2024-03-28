@@ -1,9 +1,15 @@
 package com.panda.thePanda.service.keyword_detail;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.entity.keyword_save.KeywordDetailBackupEntity;
 import com.panda.thePanda.repository.keyword_save.KeywordDetailBackupRepository;
 import com.panda.thePanda.service.keyword_top.KeywordTopService;
@@ -16,6 +22,7 @@ public class KeywordDetailGetDataService {
   private final KeywordDetailBackupRepository backupRepository;
   private final KeywordDetailBackupService detailBackupService;
   private final KeywordTopService keywordSaveService;
+  private final NaverSearchAPI searchAPI;
   private final List<KeywordDetailBackupEntity> entities;
 
   public List<KeywordDetailBackupEntity> getKeywordDetail(String keyword) {
@@ -80,6 +87,17 @@ public class KeywordDetailGetDataService {
   // 특정 카테고리와 새로운 키워드 순으로 정렬
   public List<KeywordDetailBackupEntity> getTopKeywordDetailSortByIsNew(Integer categoryId) {
     return backupRepository.findByCheckTopCategoryIdSortByIsNew(categoryId);
+  }
+
+  // 해외구매를 제외한 상품 갯수를 가져옴
+  public int getProductCountExceptAbroad(String keyword)
+      throws IOException, GeneralSecurityException, UnirestException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jsonData = searchAPI.getProductCountExceptAbroad(keyword);
+    JsonNode jsonNode;
+    jsonNode = objectMapper.readTree(jsonData);
+    JsonNode total = jsonNode.get("total");
+    return total.asInt();
   }
 
 }

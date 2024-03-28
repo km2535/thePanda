@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.panda.thePanda.api.naver_search.NaverDataLabAPI;
 import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.dto.ListKeywordAndCategoryDTO;
 import com.panda.thePanda.entity.keyword_save.KeywordByProduct;
@@ -38,6 +39,7 @@ public class NaverDataForSaveController {
   private final KeywordDetailSaveAndDeleteService saveAndDeleteService;
   private final KeywordDetailGetDataService detailGetDataService;
   private final NaverSearchAPI searchAPI;
+  private final NaverDataLabAPI dataLabAPI;
   private final KeywordDetailBackupService backupService;
   private final ProductListByKeywordService productListByKeywordService;
 
@@ -208,6 +210,52 @@ public class NaverDataForSaveController {
   public List<KeywordByProduct> getProductListByKeyword(@RequestParam String keyword)
       throws IOException, GeneralSecurityException, UnirestException {
     return productListByKeywordService.getProductListByKeyword(keyword);
+  }
+
+  // 키워드로 해외 상품을 제외한 상품 갯수 가져오기
+  @Operation(summary = "키워드로 해외 상품을 제외한 상품 갯수 가져오기", description = "키워드로 해외 상품을 제외한 상품 갯수 가져오기")
+  @GetMapping("/get-product/except-abroad")
+  public Integer getProductCountExceptAbroad(@RequestParam String keyword)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return detailGetDataService.getProductCountExceptAbroad(keyword);
+  }
+
+  // 데이터 랩에서 키워드 검색결과 가져오기
+  @Operation(summary = "데이터 랩에서 키워드 검색결과 가져오기", description = "데이터 랩에서 키워드 검색결과 가져오기")
+  @GetMapping("/get-datalab/search-result")
+  public String getShoppingInsightSearchCount(@RequestParam String keyword,
+      @RequestParam String categoryId,
+      @RequestParam Integer ago,
+      @RequestParam String type)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return dataLabAPI.getShoppingInsightSearchCount(keyword, categoryId, ago, type);
+  }
+
+  // 데이터 랩에서 연령별 키워드 검색결과 가져오기
+  @Operation(summary = "데이터 랩에서 연령별 키워드 검색결과 가져오기", description = "데이터 랩에서 연령별 키워드 검색결과 가져오기")
+  @GetMapping("/get-datalab/search-age")
+  public String getShoppingInsightAgeCount(@RequestParam String keyword,
+      @RequestParam String categoryId)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return dataLabAPI.getShoppingInsightAgeCount(keyword, categoryId);
+  }
+
+  // 데이터 랩에서 기기별 키워드 검색결과 가져오기
+  @Operation(summary = "데이터 랩에서 기기별 키워드 검색결과 가져오기", description = "데이터 랩에서 기기별 키워드 검색결과 가져오기")
+  @GetMapping("/get-datalab/search-device")
+  public String getShoppingInsightDeviceCount(@RequestParam String keyword,
+      @RequestParam String categoryId)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return dataLabAPI.getShoppingInsightDeviceCount(keyword, categoryId);
+  }
+
+  // 데이터 랩에서 성별 키워드 검색결과 가져오기
+  @Operation(summary = "데이터 랩에서 성별 키워드 검색결과 가져오기", description = "데이터 랩에서 성별 키워드 검색결과 가져오기")
+  @GetMapping("/get-datalab/search-gender")
+  public String getShoppingInsightGenderCount(@RequestParam String keyword,
+      @RequestParam String categoryId)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return dataLabAPI.getShoppingInsightGenderCount(keyword, categoryId);
   }
 
 }

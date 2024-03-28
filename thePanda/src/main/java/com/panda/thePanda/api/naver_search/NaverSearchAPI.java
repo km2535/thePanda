@@ -30,9 +30,19 @@ public class NaverSearchAPI {
   private String clientId;
   @Value("${NAVER.CLIENT.SECRET}")
   private String clientSecret;
+  @Value("${NAVER2.CLIENT.ID}")
+  private String client2Id;
+  @Value("${NAVER2.CLIENT.SECRET}")
+  private String client2Secret;
+  @Value("${NAVER3.CLIENT.ID}")
+  private String client3Id;
+  @Value("${NAVER3.CLIENT.SECRET}")
+  private String client3Secret;
+
   private String rltPath = "/keywordstool";
   private String managedPath = "/ncc/managedKeyword";
   private String shoppingPath = "/search/shop";
+  private String productCount = "getAbroadProduct";
   private String estimate = "/estimate/performance/keyword";
 
   @SuppressWarnings("null")
@@ -50,8 +60,13 @@ public class NaverSearchAPI {
     }
     if (apiPath.equals(shoppingPath)) {
       urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
-          + "&display=10&start=1&exclude=cbshop";
+          + "&display=10&start=1";
     }
+    if (apiPath.equals(productCount)) {
+      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
+          + "&display=1&start=1&exclude=cbshop";
+    }
+
     if (apiPath.equals(estimate)) {
       urlString += estimate;
     }
@@ -65,12 +80,13 @@ public class NaverSearchAPI {
           .header("X-Signature", signature)
           .asJson();
     }
-    if (apiPath.equals(shoppingPath)) {
+    if (apiPath.equals(shoppingPath) || apiPath.equals(productCount)) {
       response = Unirest.get(urlString)
           .header("X-Naver-Client-Id", clientId)
           .header("X-Naver-Client-Secret", clientSecret)
           .asJson();
     }
+
     if (apiPath.equals(estimate)) {
       JSONObject body = new JSONObject();
       List<Integer> bid = new ArrayList<>();
@@ -115,7 +131,13 @@ public class NaverSearchAPI {
     return requestNaverAPI(keyword, shoppingPath);
   }
 
+  public String getProductCountExceptAbroad(String keyword)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return requestNaverAPI(keyword, productCount);
+  }
+
   public String getAdKeyword(String keyword) throws IOException, GeneralSecurityException, UnirestException {
     return requestNaverAPI(keyword, estimate);
   }
+
 }

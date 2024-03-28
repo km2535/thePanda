@@ -33,23 +33,29 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
          
         </div>
         
-        <div className='flex w-1/6 space-x-5'>
+        <div className='flex w-1/5 text-center justify-center'>
+          <div>
           <MenuBtn isChild={false} buttonName='사용가이드' buttonPath='/guide'/>
+          </div>
+          <div>
           <MenuBtn isChild={false}  buttonName='멤버십' buttonPath='/membership'/>
+          </div>
+          <div>
           <MenuBtn isChild={false}  buttonName='로그인' buttonPath='/auth/sign-up'/>
+          </div>
         </div>    
       </div>
-      <div className={"container mx-auto justify-between flex items-center"}>
-        <div className={"w-1/6 h-2"}></div>
+      <div className={"container mx-auto justify-between flex items-center max-w-[1300px]"}>
+        <div className={"w-2/12 h-2"}></div>
         <div className="flex w-1/2 space-x-8 flex-wrap">
           {Object.entries(mainMenuList).map((value,i) =>
               Object.keys(value[1]).length > 2 &&
-              <div key={i}  className={isToggle ? "flex w-full transition-all visible translate-x-[-15px] opacity-100" : "flex w-full transition-all invisible opacity-0"}>{Object.entries(value[1]).map((v,i) =>
+              <div key={i}  className={isToggle ? "flex w-full transition-all visible translate-x-[-60px] opacity-100" : "flex w-full transition-all invisible opacity-0"}>{Object.entries(value[1]).map((v,i) =>
                 <MenuBtn key={v[0]+i} buttonName={v[0].toString()} buttonPath={v[1].toString()} isChild />)}
               </div>
             )}
           </div>
-          <div className={"flex w-1/6 space-x-5"}></div>
+          <div className={"flex w-1/6 space-x-5 h-2"}></div>
       </div>
   </div>
   );

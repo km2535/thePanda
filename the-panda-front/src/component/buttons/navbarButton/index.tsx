@@ -14,8 +14,8 @@ export default function MenuBtn(props : linkBtn) {
     navigator(props.buttonPath);
   }
   return (
-    <div className={"cursor-pointer hover:text-brandHoverFontColor mr-2"}>
-      <div onClick={buttonHandler}>{props.buttonName}</div>
+    <div className={"cursor-pointer hover:text-brandHoverFontColor mr-5"}>
+      <span onClick={buttonHandler} >{props.buttonName}</span>
     </div>
   );
 }
