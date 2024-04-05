@@ -6,7 +6,7 @@ interface MenuProps {
 }
 
 const DepthNavBtn: React.FC<MenuProps> = ({ mainMenuList, menuHandler }) => {
-const handlerMenuHandler = () => {
+  const handlerMenuHandler = () => {
     menuHandler();
   }
   return (

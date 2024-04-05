@@ -4,11 +4,12 @@ import Product from 'component/keyword/product';
 import { useEffect, useRef, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 import {  useNavigate, useSearchParams } from 'react-router-dom';
+import fake, { fakeList } from 'util/dummy';
 
 export default function Analysis() {
   const [searchParams] = useSearchParams();
-  const [productDetail, setProductDetail] = useState<any>();
-  const [productList, setProductList] = useState<any>([]);
+  const [productDetail, setProductDetail] = useState<any>(fake);
+  const [productList, setProductList] = useState<any>(fakeList);
   const [searchText, setSearchText] = useState<string>("");
   const [productCountExceptAbroad, setProductCountExceptAbroad] = useState<number>(0);
   const inputRef = useRef<any>();
@@ -36,8 +37,8 @@ export default function Analysis() {
      if (e.keyCode === 13) {
       submitHandler();
     }
-  }
-  return (
+  } 
+  return ( 
     <div >
       <div className="flex justify-center items-center">
         <div className={"relative w-3/5 mt-10 mb-10"}>
@@ -45,7 +46,7 @@ export default function Analysis() {
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
             <HiOutlineSearch className={'size-5 text-iconsColor cursor-pointer'} onClick={submitHandler}/>
           </div>
-        </div>
+        </div> 
       </div>
       <Product productDetail={productDetail} productList={productList} productCountExceptAbroad={productCountExceptAbroad} />
     </div>

@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { useEffect, useState } from 'react';
 import SearchCountAPI from 'apis/response/datalab/searchCount';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -60,8 +61,8 @@ const ShoppingInsightSearchCountChart = ({productDetail}:any) => {
         ) : datas.map((item) => 
           Math.round(((item["ratio"] / datas[datas?.length - 1]["ratio"]) * productDetail?.total_qc_cnt)/30)  
         ) ) : "",
-        borderColor: 'rgb(253, 0, 0)',
-        backgroundColor: 'rgba(240, 120, 120, 0.5)',
+        borderColor: 'rgb(0, 139, 253)',
+        backgroundColor: 'rgba(120, 168, 240, 0.5)',
         yAxisID: 'y-axis-0'
       }
     ],
@@ -74,7 +75,7 @@ const ShoppingInsightSearchCountChart = ({productDetail}:any) => {
         <div className={'cursor-pointer'} data-target="month" id="1" onClick = {optionHandler}>1년</div>
         <div className={'cursor-pointer'} data-target="month" id="3" onClick = {optionHandler}>3년</div>
       </div>
-     <Line options={options} data={data} />;
+     <Line options={options} data={data} />
     </div>
   );
 };

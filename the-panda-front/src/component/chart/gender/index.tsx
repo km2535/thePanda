@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import GenderCountAPI from 'apis/response/datalab/ageCount';
+import GenderCountAPI from 'apis/response/datalab/genderCount';
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ShoppingInsightGenderCount = ({ productDetail }: any) => {
+const ShoppingInsightGenderCountChart = ({ productDetail }: any) => {
   const [datas, setDatas] = useState([{
     period: "2023-03-01",
     ratio: 100,
@@ -50,12 +50,12 @@ const ShoppingInsightGenderCount = ({ productDetail }: any) => {
       label: '키워드 검색 성비율 (%)',
       data: [Math.round(femaleCount / (femaleCount + maleCount)* 100),  Math.round(maleCount / (maleCount+ femaleCount) * 100)],
       backgroundColor: [
-        'rgba(248, 0, 0, 0.637)',
-        'rgba(0, 26, 255, 0.61)',
+        'rgba(245, 62, 62, 0.7)',
+        'rgba(53, 98, 231, 0.7)',
       ],
       borderColor: [
-        'rgba(255, 99, 132, 1)',
-        '#3936eb',
+        'rgba(255, 182, 193, 0.7)',
+        'rgba(173, 216, 230, 0.7)',
       ],
       borderWidth: 1,
     },
@@ -74,4 +74,4 @@ const ShoppingInsightGenderCount = ({ productDetail }: any) => {
     )
   } 
 
- export default ShoppingInsightGenderCount;
+ export default ShoppingInsightGenderCountChart;

@@ -7,13 +7,19 @@ const ProductListAPI = (keyword: string,setProductList:any) => {
   //api 요청
   axios.get(API_DOMAIN).then((response) => setProductList(response.data))
 }
-
 export default ProductListAPI;
 
 // 해외 상품을 제외한 상품의 갯수
-
 export const ProdcutExceptAbroadAPI = (keyword:string, setProductCountExceptAbroad:any) => {
   const API_DOMAIN = `${process.env.REACT_APP_MAIN_API_DOMAIN}/api/panda-v1/admin/naver/get-product/except-abroad?keyword=${keyword}`
   axios.get(API_DOMAIN).then((response) => setProductCountExceptAbroad(response.data))
 }
 
+
+//쿠팡 상품 리스트 
+export const ProductListCoupangAPI = (keyword: string, setProductList: any) => {
+ setProductList([])
+  const API_DOMAIN = `${process.env.REACT_APP_MAIN_API_DOMAIN}/api/panda-v1/extraction/keyword/coupang/product-name?keyword=${keyword}`
+  //api 요청
+  axios.get(API_DOMAIN).then((response) => setProductList(response.data))
+}

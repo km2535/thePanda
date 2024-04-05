@@ -28,20 +28,20 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
               Object.keys(v[1]).length > 2 ? 
                 <DepthNavBtn mainMenuList={{ [v[0]]: v[1] }} key={i} menuHandler={menuHandler} />
                :
-            <MenuBtn  key={i} isChild={false} buttonName={ Object.keys(v[1]).toString()} buttonPath={Object.values(v[1]).toString()} />
+            <MenuBtn menuHandler={menuHandler}  key={i} isChild={false} buttonName={ Object.keys(v[1]).toString()} buttonPath={Object.values(v[1]).toString()} />
           )}
          
         </div>
         
         <div className='flex w-1/5 text-center justify-center'>
           <div>
-          <MenuBtn isChild={false} buttonName='사용가이드' buttonPath='/guide'/>
+          <MenuBtn menuHandler isChild={false} buttonName='사용가이드' buttonPath='/guide'/>
           </div>
           <div>
-          <MenuBtn isChild={false}  buttonName='멤버십' buttonPath='/membership'/>
+          <MenuBtn menuHandler isChild={false}  buttonName='멤버십' buttonPath='/membership'/>
           </div>
           <div>
-          <MenuBtn isChild={false}  buttonName='로그인' buttonPath='/auth/sign-up'/>
+          <MenuBtn menuHandler isChild={false}  buttonName='로그인' buttonPath='/auth/sign-up'/>
           </div>
         </div>    
       </div>
@@ -51,7 +51,7 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
           {Object.entries(mainMenuList).map((value,i) =>
               Object.keys(value[1]).length > 2 &&
               <div key={i}  className={isToggle ? "flex w-full transition-all visible translate-x-[-60px] opacity-100" : "flex w-full transition-all invisible opacity-0"}>{Object.entries(value[1]).map((v,i) =>
-                <MenuBtn key={v[0]+i} buttonName={v[0].toString()} buttonPath={v[1].toString()} isChild />)}
+                <MenuBtn menuHandler={menuHandler} key={v[0]+i} buttonName={v[0].toString()} buttonPath={v[1].toString()} isChild />)}
               </div>
             )}
           </div>
