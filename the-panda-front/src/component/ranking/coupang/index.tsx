@@ -36,7 +36,6 @@ const RankingTrackerCoupang = () => {
         ProductTrackerRankCoupangAPI(keywords, productId, option).then((d) => setData(d));
     } 
   } 
-  console.log(data)
      return( 
        <>
         <div className='flex flex-col mt-10 mb-10'>

@@ -1,13 +1,16 @@
 import DepthNavBtn from 'component/buttons/depthNavBtn';
 import MenuBtn from 'component/buttons/navbarButton';
+import { useAuth } from 'component/context/AuthContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface MenuProps { 
-  mainMenuList: { [key: string]: {[key:string]:string} };
+  mainMenuList: { [key: string]: { [key: string]: string } }
 }
 
 const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
+  const { userInfo, logOutHandler } = useAuth();
+
  const [isToggle, setIsToggle] = useState<boolean>(false);
   const navigate = useNavigate();
   const menuHandler = () => {
@@ -16,6 +19,7 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
   const logoClick = () => {
     navigate("/")
   }
+  
   return (
      <div className={isToggle? "w-full z-50 text-brandFontColor pt-4 h-[100px] border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50":"  w-full text-brandFontColor pt-4 h-[60px]  border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50 z-50"}>
       <div className="container mx-auto flex justify-between items-center m-auto max-w-[1300px]">
@@ -33,7 +37,7 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
          
         </div>
         
-        <div className='flex w-1/5 text-center justify-center'>
+        <div className='flex w-1/4 text-center justify-center'>
           <div>
           <MenuBtn menuHandler isChild={false} buttonName='사용가이드' buttonPath='/guide'/>
           </div>
@@ -41,7 +45,12 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
           <MenuBtn menuHandler isChild={false}  buttonName='멤버십' buttonPath='/membership'/>
           </div>
           <div>
-          <MenuBtn menuHandler isChild={false}  buttonName='로그인' buttonPath='/auth/sign-up'/>
+            {userInfo !== null ? <>
+              {userInfo?.username}님 <button onClick={logOutHandler}>로그아웃</button>
+            </>
+            :
+            <MenuBtn menuHandler isChild={false}  buttonName='로그인' buttonPath='/auth/sign-up'/>
+            }
           </div>
         </div>    
       </div>

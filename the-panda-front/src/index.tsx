@@ -14,13 +14,15 @@ import AnalysisProductToCoupang from 'views/analysis';
 import TrackingRank from 'views/tracking';
 import OAuth from 'views/Authentication/OAuth';
 
+
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App/>,
     //errorElement: <NotFound />,
     children: [
       { index: true, path: "/", element: <Landing /> }, 
@@ -40,11 +42,11 @@ const router = createBrowserRouter([
       },
       {path:"admin", element:<RealTimeDataManager/>},
       { path: "auth/sign-up", element: <SignUp /> },
-      {path:"auth/oauth-response/:token/:expirationTime", element:<OAuth/>}
+      {path:"auth/oauth-response/:token/:expirationTime/:userid", element:<OAuth/>}
     ],
   },
 ]);
-root.render(
-       <RouterProvider router={router} />
-  
+root.render(   
+
+      <RouterProvider router={router} />
 );
