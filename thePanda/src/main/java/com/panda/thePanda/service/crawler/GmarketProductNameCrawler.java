@@ -14,27 +14,48 @@ import com.panda.thePanda.dto.ProductSearchDTO;
 import com.panda.thePanda.service.crawler.impl.ProductNameCrawler;
 
 @Component
-public class GmarketProductNameCrawler implements ProductNameCrawler{
+public class GmarketProductNameCrawler implements ProductNameCrawler {
+
 	@Override
-	public List<String> getProductNamesByKeyword(ProductSearchDTO pdto) {
-		 	List<String> productNames = new ArrayList<>();
-		 	
-		 	for(int i = 1; i <= pdto.getPageCount(); i++) {
-		 		String url = "https://browse.gmarket.co.kr/search?keyword=" + pdto.getKeyword() + "&p=" + i;
+	public List<String> getProductDetailByKeyword(ProductSearchDTO pdto) {
+		List<String> productNames = new ArrayList<>();
 
-		        try {
-		            Document doc = Jsoup.connect(url).get();
-		            Elements elements = doc.select("span.text__item");
-	
-		            for (Element element : elements) {
-		                String productName = element.text();
-		                productNames.add(productName);
-		            }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
+		for (int i = 1; i <= pdto.getPageCount(); i++) {
+			String url = "https://browse.gmarket.co.kr/search?keyword=" + pdto.getKeyword() + "&p=" + i;
 
-		 	}
-	        return productNames;
+			try {
+				Document doc = Jsoup.connect(url).get();
+				Elements elements = doc.select("span.text__item");
+
+				for (Element element : elements) {
+					String productName = element.text();
+					productNames.add(productName);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return productNames;
+	}
+
+	public List<String> getProductNamesByKeyword(String keyword) {
+		List<String> productNames = new ArrayList<>();
+
+		String url = "https://browse.gmarket.co.kr/search?keyword=" + keyword + "&p=1";
+
+		try {
+			Document doc = Jsoup.connect(url).get();
+			Elements elements = doc.select("span.text__item");
+
+			for (Element element : elements) {
+				String productName = element.text();
+				productNames.add(productName);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return productNames;
 	}
 }

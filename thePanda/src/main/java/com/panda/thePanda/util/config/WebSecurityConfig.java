@@ -69,15 +69,14 @@ public class WebSecurityConfig {
 
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
-
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-    corsConfiguration.addAllowedOrigin("*");
     corsConfiguration.addAllowedMethod("*");
     corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.setAllowCredentials(true); // 인증 정보 허용
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/api/v1/**", corsConfiguration);
+    source.registerCorsConfiguration("/api/panda-v1/**", corsConfiguration);
 
     return source;
   }

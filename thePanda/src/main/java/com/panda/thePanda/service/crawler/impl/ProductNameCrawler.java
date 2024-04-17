@@ -5,6 +5,6 @@ import java.util.List;
 import com.panda.thePanda.dto.ProductSearchDTO;
 
 public interface ProductNameCrawler {
-	public List<String> getProductNamesByKeyword(ProductSearchDTO pdto);
+	public List<String> getProductDetailByKeyword(ProductSearchDTO pdto);
 
 }

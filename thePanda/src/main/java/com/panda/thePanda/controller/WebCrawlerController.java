@@ -19,22 +19,16 @@ import com.panda.thePanda.service.crawler.RelationalKeywordCrawler;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/panda-v1/search")
+@RequiredArgsConstructor
 public class WebCrawlerController {
 
 	private final RelationalKeywordCrawler relationalKeywordCrawler;
 	private final NaverTopProductNameCrawler naverTopProductNameCrawler;
 	private final CoupangProductCrawler coupangProductNameCrawler;
-
-	public WebCrawlerController(RelationalKeywordCrawler relationalKeywordCrawler,
-			NaverTopProductNameCrawler naverTopProductNameCrawler,
-			CoupangProductCrawler coupangProductNameCrawler) {
-		this.relationalKeywordCrawler = relationalKeywordCrawler;
-		this.coupangProductNameCrawler = coupangProductNameCrawler;
-		this.naverTopProductNameCrawler = naverTopProductNameCrawler;
-	}
 
 	@Operation(summary = "네이버 연관 검색어 크롤링", description = "검색 키워드를 쿼리스트링으로 전달하면 네이버 웹을 크롤링 후 연관 검색어를 리턴합니다.")
 	@GetMapping("/naver/relation-word")

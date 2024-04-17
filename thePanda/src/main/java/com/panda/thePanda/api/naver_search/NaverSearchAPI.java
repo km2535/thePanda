@@ -38,12 +38,18 @@ public class NaverSearchAPI {
   private String client3Id;
   @Value("${NAVER3.CLIENT.SECRET}")
   private String client3Secret;
+  @Value("${NAVER4.CLIENT.ID}")
+  private String client4Id;
+  @Value("${NAVER4.CLIENT.SECRET}")
+  private String client4Secret;
 
   private String rltPath = "/keywordstool";
   private String managedPath = "/ncc/managedKeyword";
   private String shoppingPath = "/search/shop";
   private String productCount = "getAbroadProduct";
   private String estimate = "/estimate/performance/keyword";
+  private String ranking = "rankingforkeyword";
+  private String rankingAfter100 = "rankingforkeywordafter100";
 
   @SuppressWarnings("null")
   public String requestNaverAPI(String keyword, String apiPath)
@@ -66,9 +72,16 @@ public class NaverSearchAPI {
       urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
           + "&display=1&start=1&exclude=cbshop";
     }
-
     if (apiPath.equals(estimate)) {
       urlString += estimate;
+    }
+    if (apiPath.equals(ranking)) {
+      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
+          + "&display=100&start=1";
+    }
+    if (apiPath.equals(rankingAfter100)) {
+      urlString = "https://openapi.naver.com/v1/search/shop.json" + "?query=" + encodedKeyword
+          + "&display=100&start=100";
     }
 
     HttpResponse<JsonNode> response = null;
@@ -84,6 +97,12 @@ public class NaverSearchAPI {
       response = Unirest.get(urlString)
           .header("X-Naver-Client-Id", clientId)
           .header("X-Naver-Client-Secret", clientSecret)
+          .asJson();
+    }
+    if (apiPath.equals(ranking) || apiPath.equals(rankingAfter100)) {
+      response = Unirest.get(urlString)
+          .header("X-Naver-Client-Id", client4Id)
+          .header("X-Naver-Client-Secret", client4Secret)
           .asJson();
     }
 
@@ -138,6 +157,14 @@ public class NaverSearchAPI {
 
   public String getAdKeyword(String keyword) throws IOException, GeneralSecurityException, UnirestException {
     return requestNaverAPI(keyword, estimate);
+  }
+
+  public String getRankKeyword(String keyword) throws IOException, GeneralSecurityException, UnirestException {
+    return requestNaverAPI(keyword, ranking);
+  }
+
+  public String getRankAfter100Keyword(String keyword) throws IOException, GeneralSecurityException, UnirestException {
+    return requestNaverAPI(keyword, rankingAfter100);
   }
 
 }

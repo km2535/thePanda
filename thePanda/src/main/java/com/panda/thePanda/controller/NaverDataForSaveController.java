@@ -3,6 +3,7 @@ package com.panda.thePanda.controller;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -20,10 +21,14 @@ import com.panda.thePanda.api.naver_search.NaverSearchAPI;
 import com.panda.thePanda.dto.ListKeywordAndCategoryDTO;
 import com.panda.thePanda.entity.keyword_save.KeywordByProduct;
 import com.panda.thePanda.entity.keyword_save.KeywordDetailBackupEntity;
+import com.panda.thePanda.entity.keyword_save.KeywordForRank;
 import com.panda.thePanda.service.crawler.DataLabTopKeywordCrawler;
+import com.panda.thePanda.service.crawler.NaverProductNameCrawler;
 import com.panda.thePanda.service.keyword_detail.KeywordDetailBackupService;
 import com.panda.thePanda.service.keyword_detail.KeywordDetailGetDataService;
 import com.panda.thePanda.service.keyword_detail.KeywordDetailSaveAndDeleteService;
+import com.panda.thePanda.service.keyword_detail.ProductPurcharedService;
+import com.panda.thePanda.service.keyword_top.KeywordRankTracking;
 import com.panda.thePanda.service.keyword_top.KeywordTopService;
 import com.panda.thePanda.service.keyword_top.ProductListByKeywordService;
 
@@ -42,6 +47,9 @@ public class NaverDataForSaveController {
   private final NaverDataLabAPI dataLabAPI;
   private final KeywordDetailBackupService backupService;
   private final ProductListByKeywordService productListByKeywordService;
+  private final NaverProductNameCrawler naverProductNameCrawler;
+  private final ProductPurcharedService purcharedService;
+  private final KeywordRankTracking rankTracking;
 
   @Operation(summary = "500키워드 테이블 삭제", description = "테이블의 모든 데이터 삭제.")
   @DeleteMapping("/delete/top-keyword")
@@ -258,4 +266,20 @@ public class NaverDataForSaveController {
     return dataLabAPI.getShoppingInsightGenderCount(keyword, categoryId);
   }
 
+  // 크롤링 하여 top80 제품의 총 구매수량, 가격 가져오기
+  @Operation(summary = "크롤링 하여 top80 제품의 총 구매수량, 가격 가져오기", description = "크롤링 하여 top80 제품의 총 구매수량, 가격 가져오기")
+  @Deprecated
+  @GetMapping("/get-crawler/search-product")
+  public HashMap<String, Integer> getSalesProductList(@RequestParam String keyword) {
+    return purcharedService.getPurcharsedCount(keyword);
+  }
+
+  // 네이버 mid 상품번호를 이용한 순위 추적
+  @Operation(summary = "네이버 mid 상품번호를 이용한 순위 추적", description = "검색한 상품의 순위를 추적합니다. ")
+  @GetMapping("/naver-tracking/rank")
+  public HashMap<String, KeywordForRank> getNaverSearchShopAPI(
+      @RequestParam String keywords, @RequestParam String midNumber)
+      throws IOException, GeneralSecurityException, UnirestException {
+    return rankTracking.trackingRankBymutipleKeyword(keywords, midNumber);
+  }
 }

@@ -32,5 +32,6 @@ export interface CoupangProduct{
   rocket: string,
   rocketImgUrl: string,
   salePrice: string,
-  vendorId : string
+  vendorId : string,
+  sortType : string,
 }

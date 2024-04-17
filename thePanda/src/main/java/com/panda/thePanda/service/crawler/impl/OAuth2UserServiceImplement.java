@@ -33,6 +33,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
     UserEntity userEntity = null;
     String userId = null;
     String email = null;
+    String image = null;
     String username = null;
 
     if (oauthClientName.equals("kakao")) {
@@ -46,7 +47,8 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
       userId = "kakao_" + oAuth2User.getAttributes().get("id");
       email = "" + kakaoAccountAttributes.get("email");
       username = "" + profile.get("nickname");
-      userEntity = new UserEntity(userId, email, username, oauthClientName);
+      image = "" + profile.get("thumbnail_image_url");
+      userEntity = new UserEntity(userId, email, username, oauthClientName, image);
     }
 
     if (oauthClientName.equals("naver")) {
@@ -55,14 +57,16 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
       userId = "naver_" + responseMap.get("id").substring(0, 14);
       email = responseMap.get("email");
       username = responseMap.get("name");
-      userEntity = new UserEntity(userId, email, username, oauthClientName);
+      image = responseMap.get("profile_image");
+      userEntity = new UserEntity(userId, email, username, oauthClientName, image);
     }
 
     if (oauthClientName.equals("Google")) {
       userId = "google_" + oAuth2User.getAttributes().get("sub");
       email = "" + oAuth2User.getAttributes().get("email");
       username = "" + oAuth2User.getAttributes().get("name");
-      userEntity = new UserEntity(userId, email, username, oauthClientName);
+      image = "" + oAuth2User.getAttributes().get("picture");
+      userEntity = new UserEntity(userId, email, username, oauthClientName, image);
     }
 
     userRepository.save(userEntity);

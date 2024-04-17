@@ -14,26 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.panda.thePanda.dto.MultiProductSearchDTO;
 import com.panda.thePanda.dto.ProductSearchDTO;
+import com.panda.thePanda.entity.keyword_save.KeywordForRankCoupang;
 import com.panda.thePanda.service.crawler.CoupangProductCrawler;
+import com.panda.thePanda.service.keyword_top.KeywordRankTrackingCoupang;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/panda-v1/coupang")
+@RequiredArgsConstructor
 public class CoupangProductController {
 	private final CoupangProductCrawler coupangProductNameCrawler;
-
-	public CoupangProductController(CoupangProductCrawler coupangProductNameCrawler) {
-		this.coupangProductNameCrawler = coupangProductNameCrawler;
-	}
+	private final KeywordRankTrackingCoupang trackingCoupang;
 
 	@Operation(summary = "쿠팡 리뷰 달린 상품 목록", description = "키워드는 필수 그 외 카테고리, 리뷰수, 페이지 수는 기본값을 적용하여 리뷰가 달린 상품을 리턴합니다.")
-	@PostMapping("/product/info")
+	@GetMapping("/product/info")
 	public List<Map<String, String>> getProductListBySearchCriteria(
-			@Parameter(description = "검색 키워드") @RequestBody ProductSearchDTO pdto) throws IOException {
+			@Parameter(description = "검색 키워드") @RequestParam String keyword) throws IOException {
 
-		return coupangProductNameCrawler.getProductListBySearchCriteria(pdto);
+		return coupangProductNameCrawler.getProductListBySearchCriteria(keyword);
 	}
 
 	@Operation(summary = "쿠팡 상품을 여러 키워드로 검색", description = "여러 키워드로 검색하며 키워드는 필수 그 외 카테고리, 리뷰수, 페이지 수는 기본값을 적용하여 리뷰가 달린 상품을 리턴합니다.")
@@ -52,7 +53,7 @@ public class CoupangProductController {
 			productSearchDTO.setKeyword(keywords[i]);
 			productSearchDTO.setCategory(categories[i]);
 			List<Map<String, String>> productResult = coupangProductNameCrawler
-					.getProductListBySearchCriteria(productSearchDTO);
+					.getProductListBySearchCriteria(productSearchDTO.getKeyword());
 			result.put(keywords[i], productResult);
 
 		}
@@ -68,6 +69,17 @@ public class CoupangProductController {
 			throws IOException, InterruptedException {
 
 		return coupangProductNameCrawler.getWeeklyReviewsByFiftyReviewers(productId, searchPage);
+	}
+
+	@Operation(summary = "해당 상품의 쿠팡 순위를 리턴합니다.", description = "해당 상품의 쿠팡 순위를 리턴합니다.")
+	@GetMapping("/coupang-tracking/rank")
+	public HashMap<String, KeywordForRankCoupang> getRankTrackerByCoupang(
+			@Parameter(description = "검색 키워드") @RequestParam String keywords,
+			@Parameter(description = "상품 id") @RequestParam String productId,
+			@Parameter(description = "정렬 방법") @RequestParam String sorted)
+			throws IOException, InterruptedException {
+
+		return trackingCoupang.getRankByCoupangProductList(keywords, productId, sorted);
 	}
 
 }

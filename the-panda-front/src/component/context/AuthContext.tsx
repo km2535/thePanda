@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }:any) => {
 
   const logOutHandler = () => {
     document.cookie = 'acessToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'userid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     window.location.reload();
   };
 

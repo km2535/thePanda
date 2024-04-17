@@ -2,17 +2,18 @@ import ProductTrackerRankAPI from 'apis/response/datalab/productRandking';
 import React, { useEffect, useRef, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { Product } from 'types/productTypes/productType,';
-import parse from 'html-react-parser';
 import { useAuth } from 'component/context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 import { userTracker } from 'apis/request/tracking';
+import NavaerProductCart from './card';
+import LoadingSpinner from 'views/common/LoadingSpinner';
 
-
-
-const RankingTrackerNaver = ({trackingHistory,trackerResult}:any) => {
+const RankingTrackerNaver = ({trackingHistory,trackerResult,eventHandler}:any) => {
   const { userInfo } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [naverSearch, setNaverSearch] = useState({ naverMid: '', naverKeyword: "" });
   const [data, setData] = useState<{ [key: string]: Product }>({}); 
+  const [dataInUser, setDataInUser] = useState<{ [key: string]: Product }[]>([]); 
   const midRef = useRef<any>();
   const keywordRef = useRef<any>();
   const changeEventHandler = (e:any) => {
@@ -38,8 +39,9 @@ const RankingTrackerNaver = ({trackingHistory,trackerResult}:any) => {
           const arr: string[] = [];
           naverSearch.naverKeyword.split(",").forEach((item) => arr.push(item.trim()));
           const keywords: string = arr.join(",").trim();
-          const mid: string = naverSearch.naverMid;
-          ProductTrackerRankAPI(keywords, mid).then((d)=>setData(d))
+        const mid: string = naverSearch.naverMid;
+        setIsLoading(true);
+          ProductTrackerRankAPI(keywords, mid).then((d)=>setData(d)).finally(() => setIsLoading(false))
         } 
   }
 
@@ -50,13 +52,18 @@ const RankingTrackerNaver = ({trackingHistory,trackerResult}:any) => {
     trackingHistory(e);
   }
   useEffect(() => {
-    //TODO: state로 관리하여 html 넣기
+    setDataInUser([])
     if (trackerResult !== undefined && trackerResult.length > 0) {
-      trackerResult?.map((item: userTracker) => 
-        ProductTrackerRankAPI(item.searchKeyword, item.productId).then((d)=>console.log(d))
-      )
+      trackerResult?.forEach((item: userTracker) => {
+        if (item.searchSource === 'naver') {
+    setIsLoading(true);
+    ProductTrackerRankAPI(item.searchKeyword, item.productId)
+      .then((d) => setDataInUser((prev) => [...prev, d])).finally(() => setIsLoading(false));
+        }
+      });
     }
-  },[trackerResult])
+  }, [trackerResult])
+
      return(
        <>
           <div className='flex flex-col mt-10 mb-10'>
@@ -70,62 +77,60 @@ const RankingTrackerNaver = ({trackingHistory,trackerResult}:any) => {
             </section>
             <section className='flex flex-col mt-10 mb-10'>
              <div className='text-4xl font-extrabold mb-5'> 검색 상품</div>
-             <div className={'flex'}>
-               {Object.entries(data).map(([keyword, product],i) => (
+             <div className={'flex flex-col'}>
+               {
+                  isLoading ?
+                   <div className={"flex text-center justify-center"}>
+                     <LoadingSpinner isLoading={isLoading} />
+                    </div>
+                   :
+                 Object.entries(data).map(([keyword, product], i) => (
                  <>
-                   {product.productId === "" ? <div>{keyword} 검색 결과는 200위가 넘어 추적 할 수 없습니다.</div> : 
-                     <form onSubmit={saveProductId}>
-                       
-                     <div key={product.title+i} className="bg-white shadow-md rounded-lg p-4 max-w-[600px]  mb-5 mr-5">
-                      <div className="flex">
-                        <div className="mr-4 max-w-[150px] w-4/12">
-                          <img src={product.image} alt={product.keyword} className="w-full h-full object-cover rounded-md" />
-                        </div>
-                        <div className="flex flex-col justify-between w-6/12">
-                          <div>
-                            <div className="text-lg font-bold">
-                              <a target='_blank' href={product.link} className="text-blue-500 hover:underline" rel="noreferrer">{parse(product.title)}</a>
-                            </div>
-                            <div className="text-gray-600">{product.lprice} 원</div>
-                            <div className="text-gray-500">
-                              {product.category1}
-                              {product.category2 ? " > " + product.category2 : ""}
-                              {product.category3 ? " > " + product.category3 : ""}
-                              {product.category4 ? ` > ${product.category4}` : ""}
-                            </div>
-                          </div>
-                          <div className="text-gray-500">
-                            <div>브랜드: {product.brand}</div>
-                            <div>판매몰: {product.mallName}</div>
-                            <div>생산자: {product.maker}</div>
-                          </div>
-                        </div>
-                         <div className={'flex flex-col w-2/12'}>
-                          <div className="text-gray-500 font-bold text-xl text-right">{product.rank}위</div>
-                           <div className="text-gray-500 font-bold text-sm text-right">{keyword}</div>
-                           {userInfo !== null ? 
-                           <div className="text-gray-500 font-bold text-sm text-right h-full flex items-end">
-                             <button className='w-full cursor-pointer text-right' type='submit'>저장하기</button>
-                          </div>
-                             : ""}
-                         </div>
-                      </div>
-                       </div>
-                       <input type="hidden" name="id" value={uuidv4()} />
+                   {product.title === "" ?
+                     <div className={"w-full pl-10 pr-10"} key={uuidv4()}>"{keyword}" 검색 결과는 200위가 넘어 추적 할 수 없습니다.</div> : 
+                     <form onSubmit={saveProductId} key={uuidv4()} className={"w-full pl-10 pr-10"}>
+                       <NavaerProductCart productDetail={product} btnName={"저장하기"} eventHandler={eventHandler} />
+                       <input type="hidden" name="id" value={userInfo?.userId+product.productId+product.keyword} />
                        <input type="hidden" name="keyword" value={keyword}/>
                        <input type="hidden" name="productId" value={product.productId} />
                        <input type="hidden" name="searchSource" value={"naver"} />
                    </form>
                    } 
                  </>
-                ))}
+                 ))
+               }
              </div>
            </section>
            <section>
              {
                userInfo !== null ? 
                  <>
-                    <div className='text-4xl font-extrabold mb-5'> 추적 상품</div>
+                   <div className='text-4xl font-extrabold mb-5'> 추적 상품</div>
+                   {isLoading ?
+                       <div className={"flex text-center justify-center"}>
+                          <LoadingSpinner isLoading={isLoading} />
+                       </div>
+                   :
+                     dataInUser.length > 0 ? dataInUser.map((object) => Object.entries(object).map(([keyword, product], i) => (
+                     <>
+                       {product.title === "" ?
+                         <div className={"flex max-w-[600px] justify-between"}>
+                           <div className={"mb-10"}>"{keyword}" 검색 결과는 200위가 넘어 추적 할 수 없습니다.</div>
+                           <div className="text-gray-500 font-bold text-sm text-right h-full flex items-end">
+                             <button className='w-full cursor-pointer text-right hover:text-black' type='submit' onClick={(e) => {
+                                const id = userInfo?.userId + product.productId + keyword
+                               eventHandler(e,id)
+                             }}>{"삭제"}</button>
+                            </div>
+                         </div>
+                         :
+                         <div className='flex-col pr-10 pl-10'>
+                            <NavaerProductCart productDetail={product} btnName={"삭제"} eventHandler={eventHandler} />
+                         </div>
+                       }
+                     </>
+                     ))) : "저장된 상품이 없습니다."
+                   }
                  </>
                : 
                 <></>

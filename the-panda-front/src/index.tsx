@@ -13,6 +13,7 @@ import Relative from 'views/keyword/relative';
 import AnalysisProductToCoupang from 'views/analysis';
 import TrackingRank from 'views/tracking';
 import OAuth from 'views/Authentication/OAuth';
+import OptimizationKeyword from 'views/optimization';
 
 
 
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
         path: "keyword", element: <Keyword />, children: [
           { path: "search", element: <Search /> },
           { path: "analysis", element: <Analysis/> },
-          { path: "related", element: <Relative/> }
+          { path: "related", element: <Relative /> },
+          {path:"optimization", element: <OptimizationKeyword/>}
           
         ]
       },

@@ -12,11 +12,12 @@ export default function OAuth() {
     if (!token || !expirationTime) {
       return;
     }
-    const now = (new Date().getTime()) * 1000;
-    const expires = new Date(now + Number(expirationTime));
+    const now = (new Date().getTime());
+    const expires = new Date(now + (Number(expirationTime) * 4000));
     setCookie('acessToken', token, { expires, path: '/' });
     setCookie('userid', userid, { expires, path: '/' });
     // 토큰을 저장하는 api. 
+    console.log(now, expires)
     
     navigate('/', { state: { token, userid } })
     window.location.reload();
