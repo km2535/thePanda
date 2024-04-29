@@ -31,35 +31,41 @@ public class CoupangProductCrawler {
 	public Map<String, Map<String, String>> getWeeklyReviewsByFiftyReviewers(String productId, int searchPage)
 			throws IOException, InterruptedException {
 		ChromeOptions options = new ChromeOptions();
-		// options.addArguments("--incognito");
-		options.addArguments("--blink-settings=imagesEnabled=false");
+		options.addArguments("--incognito");
+		// Woptions.addArguments("--blink-settings=imagesEnabled=false");
 		options.addArguments("window-size=1920,5000"); // 윈도우 사이즈 조절
+		options.addArguments("disable-blink-features=AutomationControlled");
+		options.addArguments(
+				"user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
 		WebDriver driver = new ChromeDriver(options);
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2)); // 대기 시간 조절
-		WebDriverWait waitOneSecond = new WebDriverWait(driver, Duration.ofMillis(1500)); // 대기 시간 조절
-		WebDriverWait baseWait = new WebDriverWait(driver, Duration.ofSeconds(10)); // 대기 시간 조절
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3)); // 대기 시간 조절
+		WebDriverWait waitOneSecond = new WebDriverWait(driver, Duration.ofMillis(2000)); // 대기 시간 조절
+		WebDriverWait baseWait = new WebDriverWait(driver, Duration.ofSeconds(6)); // 대기 시간 조절
 		Map<String, Map<String, String>> productsWithReviewer = new HashMap<>();
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 
-		driver.get("https://www.coupang.com/vp/products/" + productId); // 상품 페이지 접속
+		driver.get("https://www.coupang.com/vp/products/" + productId + "?isAddedCart="); // 상품 페이지 접속
 		try {
 			;
 			baseWait.until(ExpectedConditions.visibilityOfElementLocated(By.name("review"))); // review 태그가 보일때 까지 대기
 			driver.findElement(By.name("review")).click();// review 버튼 클릭
-			baseWait.until(
-					ExpectedConditions
-							.visibilityOfElementLocated( // 리뷰 목록이 보일때 까지 대기
-									By.cssSelector(".sdp-review__article__page.js_reviewArticlePagingContainer")));
-			driver.findElement(By.name("review")).click();// review 버튼 클릭
+			js.executeScript( // 페이지를 아래로 내린다.
+					"arguments[0].scrollTop = arguments[0].scrollHeight; console.log(arguments[0].scrollHeight)",
+					driver);
+			// driver.findElement(By.name("review")).click();// review 버튼 클릭
 		} catch (Exception e) {
 
 		}
 		// 페이지 길이 만큼 반복하여 검색
 		for (int i = 1; i <= searchPage; i++) {
 			try {
-
+				baseWait.until(
+						ExpectedConditions
+								.visibilityOfElementLocated( // 리뷰 목록이 보일때 까지 대기
+										By.cssSelector(".sdp-review__article__page.js_reviewArticlePagingContainer")));
 				List<WebElement> reviews = driver // 리뷰어들 선택
 						.findElements(By.cssSelector(".sdp-review__article__list.js_reviewArticleReviewList"));
+				System.out.println("리뷰어 보기");
 				for (WebElement reviewer : reviews) {
 					try {
 						reviewer // 리뷰어를 클릭하고
@@ -96,18 +102,14 @@ public class CoupangProductCrawler {
 													By.cssSelector(
 															".sdp-review__profile__article__list__reviews:nth-child(30)")));
 						}
-					} catch (Exception e) {
-						System.out.println(e);
-					}
-					try {
 						// 댓글의 갯수가 60개가 넘을 경우
-						WebElement articleElement = driver.findElement(
+						articleElement = driver.findElement(
 								By.cssSelector(".review__modal-groups.js_reviewModalGroup.review-modal-group-active"));
 
-						String countText = articleElement.findElement(By.className("js_reviewProfileModalListTotalCount"))
+						countText = articleElement.findElement(By.className("js_reviewProfileModalListTotalCount"))
 								.getText();
 						countText = countText.replace(",", "");
-						int count = Integer.parseInt(countText);
+						count = Integer.parseInt(countText);
 
 						// 60개 이상
 						if (count > 60) {
@@ -161,7 +163,7 @@ public class CoupangProductCrawler {
 						}
 
 					} catch (Exception e) {
-						System.out.println(e);
+						System.out.println("에러");
 					}
 
 					try {
@@ -173,14 +175,19 @@ public class CoupangProductCrawler {
 						System.out.println(reviewProducts.size());
 						for (WebElement reviewProductName : reviewProducts) {
 							String prodcutName = reviewProductName
-									.findElement(By.cssSelector(".sdp-review__profile__article__list__reviews__product__name")).getText();
+									.findElement(By.cssSelector(".sdp-review__profile__article__list__reviews__product__name"))
+									.getText();
 							String prodcutDate = reviewProductName
 									.findElement(By.cssSelector(".sdp-review__profile__article__list__reviews__star__date")).getText();
 							products.put(prodcutName, prodcutDate);
 						}
 						productsWithReviewer.put(reviewerName, products);
 					} catch (Exception e) {
-						// TODO: handle exception
+						System.out.println("리뷰상품 추가 에러");
+						products.put("데이터 추가 실패", "");
+						productsWithReviewer.put(reviewer
+								.findElement(By.cssSelector(".sdp-review__article__list__info__user__name.js_reviewUserProfileImage"))
+								.getText(), products);
 					}
 					// 만들어진 map 리스트에 넣기
 
@@ -192,19 +199,22 @@ public class CoupangProductCrawler {
 					}
 				}
 				try {
-					System.out.println(".sdp-review__article__page__num.js_reviewArticlePageBtn[data-page='" + (i + 1) + "']");
+					if (i != searchPage) {
 
-					driver
-							.findElement(
-									By.cssSelector(
-											".sdp-review__article__page__num.js_reviewArticlePageBtn[data-page='" + (i + 1) + "']"))
-							.click();
-					waitOneSecond.until(
-							ExpectedConditions
-									.elementToBeSelected(
-											By.cssSelector(
-													".sdp-review__article__page__num.sdp-review__article__page__num--active.js_reviewArticlePageBtn[data-page='"
-															+ (i + 1) + "']")));
+						System.out.println(".sdp-review__article__page__num.js_reviewArticlePageBtn[data-page='" + (i + 1) + "']");
+
+						driver
+								.findElement(
+										By.cssSelector(
+												".sdp-review__article__page__num.js_reviewArticlePageBtn[data-page='" + (i + 1) + "']"))
+								.click();
+						waitOneSecond.until(
+								ExpectedConditions
+										.elementToBeSelected(
+												By.cssSelector(
+														".sdp-review__article__page__num.sdp-review__article__page__num--active.js_reviewArticlePageBtn[data-page='"
+																+ (i + 1) + "']")));
+					}
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -218,6 +228,7 @@ public class CoupangProductCrawler {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+
 		return productsWithReviewer;
 	}
 
@@ -227,7 +238,7 @@ public class CoupangProductCrawler {
 
 		// 키워드, 카테고리와 페이지 수로 검색을 하고
 		String url = "https://www.coupang.com/np/search?q=" + URLEncoder.encode(keyword, "UTF-8")
-				+ "&filterSetByUser=true&channel=user&rocketAll=false&channel=user&sorter=scoreDesc&isPriceRange=false&listSize=72&component=&page=1";
+				+ "&filterSetByUser=true&channel=user&rocketAll=false&channel=user&sorter=scoreDesc&isPriceRange=false&listSize=100&component=&page=1";
 		// Connection 객체 생성 및 헤더 설정
 		Connection connection = Jsoup.connect(url)
 				.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -247,6 +258,7 @@ public class CoupangProductCrawler {
 				String productName = item.select("div.name").text();
 				String originalPrice = item.select("del.base-price").text();
 				String salePrice = item.select("strong.price-value").text();
+				String productUrl = item.select(".search-product").select("a").attr("href");
 				String rating = item.select("em.rating").text();
 				String reviewCount = item.select("span.rating-total-count").text();
 				String rewardInfo = item.select("span.reward-cash-txt").text();
@@ -254,9 +266,12 @@ public class CoupangProductCrawler {
 				String productId = item.attr("data-product-id");
 				String vendorId = item.attr("data-vendor-item-id");
 				String rocket = item.select("span.badge.rocket").select("img").attr("src");
+				String rocketName = getRocket(rocket);
 				String image = item.select(".search-product-wrap-img").select("img").attr("src");
 				String ad = item.select("span.ad-badge-text").text().equals("AD") ? "true" : "false";
 				product.put("productName", productName);
+				product.put("productUrl", "https://www.coupang.com" + productUrl);
+				product.put("rocketName", rocketName);
 				product.put("image", "https:" + image);
 				product.put("originalPrice", originalPrice);
 				product.put("salePrice", salePrice);
@@ -276,7 +291,7 @@ public class CoupangProductCrawler {
 					product.put("rocketImgUrl", "");
 					product.put("rocket", "일반");
 				} else if (!rocket.equals("")) {
-					product.put("rocketImgUrl", "https:" + rocket);
+					product.put("rocketImgUrl", rocket);
 					product.put("rocket", "로켓");
 				}
 			}
@@ -317,5 +332,34 @@ public class CoupangProductCrawler {
 			}
 		}
 		return productList;
+	}
+
+	static public String getRocket(String url) {
+		String rocket = "일반";
+
+		String sellerRocket = "https://image7.coupangcdn.com/image/coupang/rds/logo/iphone_2x/logoRocketMerchantLargeV3R3@2x.png";
+		String rocketDelivery = "https://image6.coupangcdn.com/image/cmg/icon/ios/logo_rocket_large@3x.png";
+		String rocketDirectly = "https://image6.coupangcdn.com/image/delivery_badge/default/pc/global_b/global_b.png";
+		String rocketInstall = "https://image7.coupangcdn.com/image/badges/rocket-install/v3/aos_2/rocket_install_xhdpi.png";
+		String rocketLuxury = "https://image9.coupangcdn.com/image/badges/falcon/v1/web/rocket_luxury@2x.png";
+		String rocketFresh = "https://image6.coupangcdn.com/image/badges/falcon/v1/web/rocket-fresh@2x.png";
+
+		if (url.equals(sellerRocket)) {
+			rocket = "판매자로켓";
+		} else if (url.equals(rocketDelivery)) {
+			rocket = "로켓배송";
+		} else if (url.equals(rocketDirectly)) {
+			rocket = "로켓직구";
+		} else if (url.equals(rocketInstall)) {
+			rocket = "로켓설치";
+		} else if (url.equals(rocketLuxury)) {
+			rocket = "로켓럭셔리";
+		} else if (url.equals(rocketFresh)) {
+			rocket = "로켓배송";
+		} else {
+			rocket = "일반상품";
+		}
+
+		return rocket;
 	}
 }

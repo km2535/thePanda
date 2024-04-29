@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }:any) => {
       GetUserInfo(location.state.userid)
         .then((user) => setUserInfo(user))
         .catch((error) => console.error('Error fetching user information:', error));
-      } else {
+      } else if(cookieid.userid !== undefined) {
       GetUserInfo(cookieid.userid)
         .then((user) => setUserInfo(user)) 
         .catch((error) => console.error('Error fetching user information:', error));

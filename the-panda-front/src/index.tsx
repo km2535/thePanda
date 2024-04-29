@@ -10,10 +10,15 @@ import Keyword from 'views/keyword';
 import Search from 'views/keyword/search';
 import Analysis from 'views/keyword/analysis';
 import Relative from 'views/keyword/relative';
-import AnalysisProductToCoupang from 'views/analysis';
+import AnalysisProductToCoupang from 'views/analysis/product';
 import TrackingRank from 'views/tracking';
 import OAuth from 'views/Authentication/OAuth';
 import OptimizationKeyword from 'views/optimization';
+import AnalysisMarket from 'views/analysis/market';
+import MarketInNaver from 'views/analysis/market/naver';
+import MarketInCoupang from 'views/analysis/market/coupang';
+import MarketInGmarket from 'views/analysis/market/gmarket';
+import MarketInKakao from 'views/analysis/market/kakao';
 
 
 
@@ -38,6 +43,15 @@ const router = createBrowserRouter([
       },
       {
         path:"analysis-coupang/product", element:<AnalysisProductToCoupang/>
+      },
+      {
+        path: "analysis/market", element: <AnalysisMarket />, children: [
+          { path: "naver", element: <MarketInNaver /> },
+          { path: "coupang", element: <MarketInCoupang/> },
+          { path: "gmarket", element: <MarketInGmarket /> },
+          { path: "kakao", element: <MarketInKakao /> },
+          
+        ]
       },
       {
         path:"product/tracking", element:<TrackingRank/>

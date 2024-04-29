@@ -4,6 +4,10 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        custom:
+          "0 4px 6px -1px rgba(0, 0, 0, 1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      },
       backgroundSize: {
         "50%": "50% 50%",
         "80%": "80% 80%",
@@ -25,6 +29,16 @@ module.exports = {
         sports: "url('./assets/images/sports.png')",
         healthy: "url('./assets/images/healthy.png')",
         travel: "url('./assets/images/travel.png')",
+        naver: "url('./assets/images/naver.png')",
+        coupang: "url('./assets/images/coupang.png')",
+        gmarket: "url('./assets/images/gmarket.png')",
+        kakao: "url('./assets/images/kakao.png')",
+        sellerRocket: "url('./assets/images/sellerRocket.png')",
+        rocketDelivery: "url('./assets/images/rocketDelivery.png')",
+        rocketDirectly: "url('./assets/images/rocketDirectly.png')",
+        rocketInstall: "url('./assets/images/rocketInstall.png')",
+        rocketLuxury: "url('./assets/images/rocketLuxury.png')",
+        rocketFresh: "url('./assets/images/rocketFresh.png')",
       },
       colors: {
         iconsColor: "#001C34",

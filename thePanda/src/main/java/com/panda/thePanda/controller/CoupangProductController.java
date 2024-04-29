@@ -6,14 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.panda.thePanda.dto.MultiProductSearchDTO;
-import com.panda.thePanda.dto.ProductSearchDTO;
 import com.panda.thePanda.entity.keyword_save.KeywordForRankCoupang;
 import com.panda.thePanda.service.crawler.CoupangProductCrawler;
 import com.panda.thePanda.service.keyword_top.KeywordRankTrackingCoupang;
@@ -38,24 +34,16 @@ public class CoupangProductController {
 	}
 
 	@Operation(summary = "쿠팡 상품을 여러 키워드로 검색", description = "여러 키워드로 검색하며 키워드는 필수 그 외 카테고리, 리뷰수, 페이지 수는 기본값을 적용하여 리뷰가 달린 상품을 리턴합니다.")
-	@PostMapping("/multi-product/info")
+	@GetMapping("/multi-product/info")
 	public Map<String, List<Map<String, String>>> getProductInfoByMultipleKeywords(
-			@Parameter(description = "검색 키워드") @RequestBody MultiProductSearchDTO multiProductSearchDTO) throws IOException {
+			@Parameter(description = "검색 키워드") @RequestParam String keywords) throws IOException {
 		Map<String, List<Map<String, String>>> result = new HashMap<>();
-		String[] keywords = multiProductSearchDTO.getKeywords();
-		String[] categories = multiProductSearchDTO.getCategories();
-		final int MAX_PAGE_COUNT = 5;
-
-		for (int i = 0; i < keywords.length; i++) {
-			int pageCount = Math.min(multiProductSearchDTO.getPageCount(), MAX_PAGE_COUNT);
-			ProductSearchDTO productSearchDTO = new ProductSearchDTO();
-			productSearchDTO.setPageCount(pageCount);
-			productSearchDTO.setKeyword(keywords[i]);
-			productSearchDTO.setCategory(categories[i]);
+		String[] keywordsArr = keywords.split(",");
+		for (String item : keywordsArr) {
+			String keyword = item.trim();
 			List<Map<String, String>> productResult = coupangProductNameCrawler
-					.getProductListBySearchCriteria(productSearchDTO.getKeyword());
-			result.put(keywords[i], productResult);
-
+					.getProductListBySearchCriteria(keyword);
+			result.put(keyword, productResult);
 		}
 
 		return result;

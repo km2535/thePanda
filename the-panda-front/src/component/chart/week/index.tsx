@@ -51,7 +51,7 @@ const ShoppingInsightWeekendsCountChart = ({ productDetail }: any) => {
             title: {
               display: true,
               text: `${productDetail?.update_date} ~ ${getOneMonthAgo(productDetail?.update_date)}`,
-            },
+            }
           },
       };
   

@@ -19,7 +19,7 @@ export const ProdcutExceptAbroadAPI = (keyword:string, setProductCountExceptAbro
 //쿠팡 상품 리스트 
 export const ProductListCoupangAPI = (keyword: string, setProductList: any) => {
  setProductList([])
-  const API_DOMAIN = `${process.env.REACT_APP_MAIN_API_DOMAIN}/api/panda-v1/extraction/keyword/coupang/product-name?keyword=${keyword}`
+  const API_DOMAIN = `${process.env.REACT_APP_MAIN_API_DOMAIN}/api/panda-v1/extraction/product-name/coupang?keyword=${keyword}`
   //api 요청
   axios.get(API_DOMAIN).then((response) => setProductList(response.data))
 }

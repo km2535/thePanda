@@ -22,7 +22,7 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
   
   return (
      <div className={isToggle? "w-full z-50 text-brandFontColor pt-4 h-[100px] border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50":"  w-full text-brandFontColor pt-4 h-[60px]  border-b-zinc-500 shadow-sm transition-all sticky top-0 bg-slate-50 z-50"}>
-      <div className="container mx-auto flex justify-between items-center m-auto max-w-[1300px]">
+      <div className="container mx-auto flex justify-between items-center m-auto max-w-[1450px]">
         <div className='w-1/6 h-full'>
           <div className="bg-center bg-logo w-full h-10 bg-no-repeat cursor-pointer" onClick={logoClick}></div>
         </div>
@@ -59,7 +59,7 @@ const NavBar: React.FC<MenuProps> = ({ mainMenuList }) => {
         <div className="flex w-1/2 space-x-8 flex-wrap">
           {Object.entries(mainMenuList).map((value,i) =>
               Object.keys(value[1]).length > 2 &&
-              <div key={i}  className={isToggle ? "flex w-full transition-all visible translate-x-[-60px] opacity-100" : "flex w-full transition-all invisible opacity-0"}>{Object.entries(value[1]).map((v,i) =>
+              <div key={i}  className={isToggle ? "flex w-full transition-all visible translate-x-[-125px] opacity-100" : "flex w-full transition-all invisible opacity-0"}>{Object.entries(value[1]).map((v,i) =>
                 <MenuBtn menuHandler={menuHandler} key={v[0]+i} buttonName={v[0].toString()} buttonPath={v[1].toString()} isChild />)}
               </div>
             )}

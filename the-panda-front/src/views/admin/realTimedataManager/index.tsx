@@ -6,9 +6,9 @@ import React, { useState } from 'react';
 export default function RealTimeDataManager() {
   const [message, setMessage] = useState<string>("");
   const dataCollectionStarter = () => {
-    //수집 api를 요청합니다.
-    DataCollector(setMessage)
-  }
+    //수집 api를 요청합니다.  
+    DataCollector(setMessage) 
+  } 
   // 정해진 시간에 도래되면 함수를 실행합니다. 
 
   return (

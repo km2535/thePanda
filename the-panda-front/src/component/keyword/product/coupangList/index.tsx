@@ -1,11 +1,11 @@
 import { ProductListCoupangAPI } from 'apis/response/productList';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fakeListCoupang } from 'util/dummy';
 
 const ProductListCoupang = () => {
   const [searchParams] = useSearchParams();
-  const [productList, setProductList] = useState(fakeListCoupang);
+  const [productList, setProductList] = useState([]);
+
   useEffect(() => { 
     const keyword = searchParams.get("keyword")
     if (keyword) {
@@ -17,7 +17,7 @@ const ProductListCoupang = () => {
          {productList.map((item, i) =>
             i <10 ?
              <div key={i} id={i + ""}>
-             {item.productName}
+             {item}
            </div> : "")}
        </>
     )
